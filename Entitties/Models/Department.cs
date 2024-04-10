@@ -18,7 +18,7 @@ namespace Entitties.Models
         [Required(ErrorMessage = "Department Description is a required field.")]
         public string Description { get; set; }
 
-        public Product product { get; set; }
-        public List<Worker> workers { get; set; }
+        public List<Product> Products { get; set; }
+        public List<Worker> Workers { get; set; }
     }
 }

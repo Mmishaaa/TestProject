@@ -21,7 +21,6 @@ namespace Entitties.Models
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Age is a required field.")]
-        [Range(1, 100, ErrorMessage = "Age must be between 1 and 100.")]
         public int Age { get; set; }
 
         public List<Department> Departments { get; set; }
