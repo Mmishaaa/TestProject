@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entitties;
 using Entitties.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,12 @@ namespace Repository
     {
         public DepartmentRepository(RepositoryContext repositoryContext) : base(repositoryContext)
         {
-            
+               
         }
+
+        public IEnumerable<Department> GetAllDepartments(bool trackChanges) => 
+            FindAll(trackChanges)
+            .OrderBy(d => d.Name)
+            .ToList();
     }
 }
