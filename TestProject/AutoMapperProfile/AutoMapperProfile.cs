@@ -9,6 +9,7 @@ namespace TestProject.AutoMapperProfile
         public AutoMapperProfile()
         {
             CreateMap<Department, DepartmentDTO>();
+            CreateMap<Product, ProductDto>();
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DTO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace TestProject.Controllers
 {
@@ -17,33 +15,44 @@ namespace TestProject.Controllers
         public DepartmentsController(IRepositoryManager repository, ILogger<DepartmentsController> logger, IMapper mapper)
         {
             _repository = repository;
-           _logger = logger;
+            _logger = logger;
             _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult GetDepartments()
         {
-            try
-            {
-                var departments = _repository.Department.GetAllDepartments(trackChanges: false);
+            /* try
+             {*/
+            var departments = _repository.Department.GetAllDepartments(trackChanges: false);
 
-                /* var departmentsDto = departments.Select(d => new DepartmentDTO
-                 {
-                     Id = d.Id,
-                     Name = d.Name,
-                     Description = d.Description,
-                 }).ToList();*/
+            var departmentsDto = departments.Select(department => _mapper.Map<DepartmentDTO>(department));
 
-                var departmentsDto = departments.Select(department => _mapper.Map<DepartmentDTO>(department));
-
-                return Ok(departmentsDto);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong in the {nameof(GetDepartments)} action {ex} ");
-                return StatusCode(500, "Internal server error");
-            }
+            return Ok(departmentsDto);
+            /*  }
+              catch (Exception ex)
+              {
+                  _logger.LogError($"Something went wrong in the {nameof(GetDepartments)} action {ex} ");
+                  return StatusCode(500, "Internal server error");
+              }*/
         }
+
+        [HttpGet("{id}")]
+
+        public IActionResult GetDepartment(Guid id)
+        {
+            var department = _repository.Department.GetDepartment(id, trackChanges: false);
+
+            if (department == null)
+            {
+                _logger.LogInformation($"Department with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var departmentDto = _mapper.Map<DepartmentDTO>(department);
+            return Ok(departmentDto);
+        }
+
+       
     }
 }
