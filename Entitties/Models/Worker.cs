@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -24,5 +25,6 @@ namespace Entitties.Models
         public int Age { get; set; }
 
         public List<Department> Departments { get; set; }
+
     }
 }

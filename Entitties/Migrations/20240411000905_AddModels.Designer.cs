@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entities.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240410193410_AddModels")]
+    [Migration("20240411000905_AddModels")]
     partial class AddModels
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace Entities.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DepartmentWorker", b =>
+            modelBuilder.Entity("Entities.Models.DepartmentWorker", b =>
                 {
                     b.Property<Guid>("DepartmentsId")
                         .HasColumnType("uniqueidentifier");
@@ -37,7 +37,7 @@ namespace Entities.Migrations
 
                     b.HasIndex("WorkersId");
 
-                    b.ToTable("DepartmentWorker");
+                    b.ToTable("DepartmentWorker", (string)null);
                 });
 
             modelBuilder.Entity("Entitties.Models.Department", b =>
@@ -110,19 +110,23 @@ namespace Entities.Migrations
                     b.ToTable("Workers");
                 });
 
-            modelBuilder.Entity("DepartmentWorker", b =>
+            modelBuilder.Entity("Entities.Models.DepartmentWorker", b =>
                 {
-                    b.HasOne("Entitties.Models.Department", null)
+                    b.HasOne("Entitties.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entitties.Models.Worker", null)
+                    b.HasOne("Entitties.Models.Worker", "Worker")
                         .WithMany()
                         .HasForeignKey("WorkersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Worker");
                 });
 
             modelBuilder.Entity("Entitties.Models.Product", b =>
