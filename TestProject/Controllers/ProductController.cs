@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DTO;
+using Entitties.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.Design;
 
 namespace TestProject.Controllers
 {
@@ -38,7 +41,7 @@ namespace TestProject.Controllers
             return Ok(productsDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetProductForDepartment")]
         public IActionResult GetWorkerForDepartment(Guid departmentId, Guid id)
         {
             var department = _repository.Department.GetDepartment(departmentId, trackChanges: false);
@@ -59,6 +62,32 @@ namespace TestProject.Controllers
 
             var product = _mapper.Map<ProductDto>(productFromDb);
             return Ok(product);
+        }
+
+        [HttpPost]
+        //[Route("api/departments/{departmentId}/products")]
+        public IActionResult CreateProductForDepartment(Guid departmentId, [FromBody] CreateProductDto createProductDto)
+        {
+            if(createProductDto == null)
+            {
+                _logger.LogInformation("CreateProductDto object sent from client is null");
+                return BadRequest("CreateProductDto object is null");
+            }
+
+            var department = _repository.Department.GetDepartment(departmentId, trackChanges: false);
+
+            if(department == null)
+            {
+                _logger.LogInformation($"Department with id: ${departmentId} doesn't exist in database");
+                return NotFound();
+            }
+
+            var product = _mapper.Map<Product>(createProductDto);
+            _repository.Product.CreateProductForDepartment(departmentId, product);
+            _repository.Save();
+
+            var productToReturn = _mapper.Map<ProductDto>(product);
+            return CreatedAtRoute("GetProductForDepartment", new { departmentId, id = productToReturn.Id }, productToReturn);
         }
     }
 }

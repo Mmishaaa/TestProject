@@ -1,12 +1,6 @@
 ﻿using Contracts;
 using Entitties;
 using Entitties.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -24,5 +18,10 @@ namespace Repository
             FindByCondition(p => p.DepartmentId.Equals(departmentId) && p.Id.Equals(id), trackChanges)
             .SingleOrDefault();
 
+        public void CreateProductForDepartment(Guid deprtmentId, Product product)
+        {
+            product.DepartmentId = deprtmentId;
+            Create(product);
+        }
     }
 }
