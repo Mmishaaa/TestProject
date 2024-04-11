@@ -20,5 +20,6 @@ namespace Repository
             FindByCondition(d => d.Id.Equals(id), trackChanges)
             .SingleOrDefault();
 
+        public void CreateDepartment(Department department) => Create(department);
     }
 }

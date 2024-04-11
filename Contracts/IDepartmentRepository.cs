@@ -11,5 +11,6 @@ namespace Contracts
     {
         IEnumerable<Department> GetAllDepartments(bool trackChanges);
         Department GetDepartment(Guid id, bool trackChanges);
+        void CreateDepartment(Department department);
     }
 }

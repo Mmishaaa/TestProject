@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DTO;
+using Entitties.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TestProject.Controllers
@@ -22,22 +23,14 @@ namespace TestProject.Controllers
         [HttpGet]
         public IActionResult GetDepartments()
         {
-            /* try
-             {*/
             var departments = _repository.Department.GetAllDepartments(trackChanges: false);
 
             var departmentsDto = departments.Select(department => _mapper.Map<DepartmentDTO>(department));
 
             return Ok(departmentsDto);
-            /*  }
-              catch (Exception ex)
-              {
-                  _logger.LogError($"Something went wrong in the {nameof(GetDepartments)} action {ex} ");
-                  return StatusCode(500, "Internal server error");
-              }*/
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "DepartmentById")]
 
         public IActionResult GetDepartment(Guid id)
         {
@@ -53,6 +46,23 @@ namespace TestProject.Controllers
             return Ok(departmentDto);
         }
 
-       
+        [HttpPost]
+        public IActionResult CreateDepartment([FromBody]CreateDepartmentDto createDepartmentDto)
+        {
+            if(createDepartmentDto == null)
+            {
+                _logger.LogError("CreateDepartmentDto object sent from client is null.");
+                return BadRequest("CreateDepartmentDto object is null");
+            }
+
+            var department = _mapper.Map<Department>(createDepartmentDto);
+
+            _repository.Department.CreateDepartment(department);
+            _repository.Save();
+
+            var departmentToReturn = _mapper.Map<DepartmentDTO>(department);
+            return CreatedAtRoute("DepartmentById", new { id = departmentToReturn.Id}, departmentToReturn);
+        }
+
     }
 }
