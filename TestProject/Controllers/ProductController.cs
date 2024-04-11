@@ -65,7 +65,6 @@ namespace TestProject.Controllers
         }
 
         [HttpPost]
-        //[Route("api/departments/{departmentId}/products")]
         public IActionResult CreateProductForDepartment(Guid departmentId, [FromBody] CreateProductDto createProductDto)
         {
             if(createProductDto == null)

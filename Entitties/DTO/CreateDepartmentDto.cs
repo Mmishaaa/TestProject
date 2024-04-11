@@ -12,5 +12,7 @@ namespace Entities.DTO
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public IEnumerable<CreateProductDto> Products { get; set; }
     }
 }
