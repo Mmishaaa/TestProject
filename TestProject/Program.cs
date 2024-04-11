@@ -3,6 +3,7 @@ using Entitties;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Serilog;
+using TestProject.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,8 +31,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler(exceptionHandlerApp => exceptionHandlerApp.ConfigureExceptionHandler());
 app.UseSerilogRequestLogging();
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
