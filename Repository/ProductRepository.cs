@@ -23,5 +23,10 @@ namespace Repository
             product.DepartmentId = deprtmentId;
             Create(product);
         }
+
+        public void DeleteProduct(Product product)
+        {
+            Delete(product);
+        }
     }
 }

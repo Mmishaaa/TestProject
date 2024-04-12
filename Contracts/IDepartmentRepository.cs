@@ -13,5 +13,7 @@ namespace Contracts
         Department GetDepartment(Guid id, bool trackChanges);
         void CreateDepartment(Department department);
         IEnumerable<Department> GetByIds(IEnumerable<Guid> ids, bool trackChanges);
+
+        void DeleteDepartment(Department department);
     }
 }

@@ -24,5 +24,7 @@ namespace Repository
         public IEnumerable<Department> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
             FindByCondition(x => ids.Contains(x.Id), trackChanges)
             .ToList();
+
+        public void DeleteDepartment(Department department) => Delete(department);
     }
 }

@@ -114,5 +114,22 @@ namespace TestProject.Controllers
 
             return CreatedAtRoute("DepartmentCollection", new { ids }, departmentCollectionToReturn);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteDepartment(Guid id)
+        {
+            var departmentFromDb = _repository.Department.GetDepartment(id, trackChanges: false);
+
+            if(departmentFromDb == null)
+            {
+                _logger.LogInformation($"Departmnet with id: {id} doesn't exist in the database");
+                return NotFound();
+            }
+
+            _repository.Department.DeleteDepartment(departmentFromDb);
+            _repository.Save();
+
+            return NoContent();
+        }
     }
 }

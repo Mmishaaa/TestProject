@@ -2,9 +2,7 @@
 using Contracts;
 using Entities.DTO;
 using Entitties.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.Design;
 
 namespace TestProject.Controllers
 {
@@ -67,7 +65,7 @@ namespace TestProject.Controllers
         [HttpPost]
         public IActionResult CreateProductForDepartment(Guid departmentId, [FromBody] CreateProductDto createProductDto)
         {
-            if(createProductDto == null)
+            if (createProductDto == null)
             {
                 _logger.LogInformation("CreateProductDto object sent from client is null");
                 return BadRequest("CreateProductDto object is null");
@@ -75,7 +73,7 @@ namespace TestProject.Controllers
 
             var department = _repository.Department.GetDepartment(departmentId, trackChanges: false);
 
-            if(department == null)
+            if (department == null)
             {
                 _logger.LogInformation($"Department with id: ${departmentId} doesn't exist in database");
                 return NotFound();
@@ -87,6 +85,31 @@ namespace TestProject.Controllers
 
             var productToReturn = _mapper.Map<ProductDto>(product);
             return CreatedAtRoute("GetProductForDepartment", new { departmentId, id = productToReturn.Id }, productToReturn);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteProductForDepartment(Guid departmentId, Guid id)
+        {
+            var department = _repository.Department.GetDepartment(departmentId, trackChanges: false);
+
+            if (department == null)
+            {
+                _logger.LogInformation($"Department with id {departmentId} doesn't exist in the database");
+                return NotFound();
+            }
+
+            var productForDepartment = _repository.Product.GetProduct(departmentId, id, trackChanges: false);
+
+            if(productForDepartment == null)
+            {
+                _logger.LogInformation($"Product with id: {id} doesn't exist in the database");
+                return NotFound();
+            }
+
+            _repository.Product.DeleteProduct(productForDepartment);
+            _repository.Save();
+
+            return NoContent();
         }
     }
 }
