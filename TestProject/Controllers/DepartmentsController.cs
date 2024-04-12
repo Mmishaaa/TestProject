@@ -2,6 +2,7 @@
 using Contracts;
 using Entities.DTO;
 using Entitties.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using TestProject.ModelBinders;
 
@@ -150,6 +151,34 @@ namespace TestProject.Controllers
             }
 
             _mapper.Map(updateDepartmentDto, departmentFromDb);
+            _repository.Save();
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdateDepartment(Guid id, [FromBody] JsonPatchDocument<UpdateDepartmentDto> patchDoc)
+        {
+            if(patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+
+            var departmentFromDb = _repository.Department.GetDepartment(id, trackChanges: true);
+
+
+            if (departmentFromDb == null)
+            {
+                _logger.LogInformation($"Department with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var departmentToPatch = _mapper.Map<UpdateDepartmentDto>(departmentFromDb);
+            patchDoc.ApplyTo(departmentToPatch);
+
+            _mapper.Map(departmentToPatch, departmentFromDb);
+
             _repository.Save();
 
             return NoContent();
