@@ -23,9 +23,9 @@ namespace TestProject.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetDepartments()
+        public async Task<IActionResult> GetDepartments()
         {
-            var departments = _repository.Department.GetAllDepartments(trackChanges: false);
+            var departments = await _repository.Department.GetAllDepartmentsAsync(trackChanges: false);
 
             var departmentsDto = departments.Select(department => _mapper.Map<DepartmentDTO>(department));
 
@@ -34,9 +34,9 @@ namespace TestProject.Controllers
 
         [HttpGet("{id}", Name = "DepartmentById")]
 
-        public IActionResult GetDepartment(Guid id)
+        public async Task<IActionResult> GetDepartment(Guid id)
         {
-            var department = _repository.Department.GetDepartment(id, trackChanges: false);
+            var department = await _repository.Department.GetDepartmentAsync(id, trackChanges: false);
 
             if (department == null)
             {
@@ -50,7 +50,7 @@ namespace TestProject.Controllers
 
 
         [HttpPost]
-        public IActionResult CreateDepartment([FromBody] CreateDepartmentDto createDepartmentDto)
+        public async Task<IActionResult> CreateDepartment([FromBody] CreateDepartmentDto createDepartmentDto)
         {
             if (createDepartmentDto == null)
             {
@@ -68,7 +68,7 @@ namespace TestProject.Controllers
             var department = _mapper.Map<Department>(createDepartmentDto);
 
             _repository.Department.CreateDepartment(department);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var departmentToReturn = _mapper.Map<DepartmentDTO>(department);
             return CreatedAtRoute("DepartmentById", new { id = departmentToReturn.Id }, departmentToReturn);
@@ -76,7 +76,7 @@ namespace TestProject.Controllers
 
 
         [HttpGet("collection/({ids})", Name = "DepartmentCollection")]
-        public IActionResult GetDepartmentCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        public async Task<IActionResult> GetDepartmentCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             if (ids == null)
             {
@@ -84,7 +84,7 @@ namespace TestProject.Controllers
                 return BadRequest("Parameter ids is null");
             }
 
-            var departmentCollection = _repository.Department.GetByIds(ids, trackChanges: false);
+            var departmentCollection = await _repository.Department.GetByIdsAsync(ids, trackChanges: false);
 
             if (ids.Count() != departmentCollection.Count())
             {
@@ -98,7 +98,7 @@ namespace TestProject.Controllers
 
         [HttpPost("collection")]
 
-        public IActionResult CreateDepartmentCollection([FromBody] IEnumerable<CreateDepartmentDto> departmentCollection)
+        public async Task<IActionResult> CreateDepartmentCollection([FromBody] IEnumerable<CreateDepartmentDto> departmentCollection)
         {
             if (departmentCollection == null)
             {
@@ -114,7 +114,7 @@ namespace TestProject.Controllers
                 _repository.Department.CreateDepartment(department);
             }
 
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var departmentCollectionToReturn = _mapper.Map<IEnumerable<DepartmentDTO>>(departments);
 
@@ -124,9 +124,9 @@ namespace TestProject.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteDepartment(Guid id)
+        public async Task<IActionResult> DeleteDepartment(Guid id)
         {
-            var departmentFromDb = _repository.Department.GetDepartment(id, trackChanges: false);
+            var departmentFromDb = await _repository.Department.GetDepartmentAsync(id, trackChanges: false);
 
             if (departmentFromDb == null)
             {
@@ -135,13 +135,13 @@ namespace TestProject.Controllers
             }
 
             _repository.Department.DeleteDepartment(departmentFromDb);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateDepartment(Guid id, [FromBody] UpdateDepartmentDto updateDepartmentDto)
+        public async Task<IActionResult> UpdateDepartment(Guid id, [FromBody] UpdateDepartmentDto updateDepartmentDto)
         {
             if (updateDepartmentDto == null)
             {
@@ -149,7 +149,7 @@ namespace TestProject.Controllers
                 return BadRequest("updateDepartmentDto is null");
             }
 
-            var departmentFromDb = _repository.Department.GetDepartment(id, trackChanges: true);
+            var departmentFromDb = await _repository.Department.GetDepartmentAsync(id, trackChanges: true);
 
             if (!ModelState.IsValid)
             {
@@ -164,21 +164,21 @@ namespace TestProject.Controllers
             }
 
             _mapper.Map(updateDepartmentDto, departmentFromDb);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateDepartment(Guid id, [FromBody] JsonPatchDocument<UpdateDepartmentDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateDepartment(Guid id, [FromBody] JsonPatchDocument<UpdateDepartmentDto> patchDoc)
         {
-            if(patchDoc == null)
+            if (patchDoc == null)
             {
                 _logger.LogError("patchDoc object sent from client is null.");
                 return BadRequest("patchDoc object is null");
             }
 
-            var departmentFromDb = _repository.Department.GetDepartment(id, trackChanges: true);
+            var departmentFromDb = await _repository.Department.GetDepartmentAsync(id, trackChanges: true);
 
 
             if (departmentFromDb == null)
@@ -192,7 +192,7 @@ namespace TestProject.Controllers
 
             _mapper.Map(departmentToPatch, departmentFromDb);
 
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }

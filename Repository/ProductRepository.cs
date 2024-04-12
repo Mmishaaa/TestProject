@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entitties;
 using Entitties.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -10,13 +11,14 @@ namespace Repository
         {
         }
 
-        public IEnumerable<Product> GetProducts(Guid departmentId, bool trackChanges) =>
-            FindByCondition(p => p.DepartmentId.Equals(departmentId), trackChanges)
-            .OrderBy(p => p.Name);
+        public async Task<IEnumerable<Product>> GetProductsAsync(Guid departmentId, bool trackChanges) =>
+            await FindByCondition(p => p.DepartmentId.Equals(departmentId), trackChanges)
+            .OrderBy(p => p.Name)
+            .ToListAsync();
 
-        public Product? GetProduct(Guid departmentId, Guid id, bool trackChanges) =>
-            FindByCondition(p => p.DepartmentId.Equals(departmentId) && p.Id.Equals(id), trackChanges)
-            .SingleOrDefault();
+        public async Task<Product?> GetProductAsync(Guid departmentId, Guid id, bool trackChanges) =>
+            await FindByCondition(p => p.DepartmentId.Equals(departmentId) && p.Id.Equals(id), trackChanges)
+            .SingleOrDefaultAsync();
 
         public void CreateProductForDepartment(Guid deprtmentId, Product product)
         {

@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entitties;
 using Entitties.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -11,20 +12,22 @@ namespace Repository
 
         }
 
-        public IEnumerable<Department> GetAllDepartments(bool trackChanges) =>
-            FindAll(trackChanges)
+        public async Task<IEnumerable<Department>> GetAllDepartmentsAsync(bool trackChanges) =>
+           await FindAll(trackChanges)
             .OrderBy(d => d.Name)
-            .ToList();
+            .ToListAsync();
 
-        public Department? GetDepartment(Guid id, bool trackChanges) =>
-            FindByCondition(d => d.Id.Equals(id), trackChanges)
-            .SingleOrDefault();
+        public async Task<Department?> GetDepartmentAsync(Guid id, bool trackChanges) =>
+            await FindByCondition(d => d.Id.Equals(id), trackChanges)
+            .SingleOrDefaultAsync();
 
         public void CreateDepartment(Department department) => Create(department);
-        public IEnumerable<Department> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
-            FindByCondition(x => ids.Contains(x.Id), trackChanges)
-            .ToList();
+        public async Task<IEnumerable<Department>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges) =>
+            await FindByCondition(x => ids.Contains(x.Id), trackChanges)
+            .ToListAsync();
 
         public void DeleteDepartment(Department department) => Delete(department);
+
+        
     }
 }

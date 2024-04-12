@@ -22,9 +22,9 @@ namespace TestProject.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetWorkersForDepartment(Guid departmentId)
+        public async Task<IActionResult> GetWorkersForDepartment(Guid departmentId)
         {
-            var department = _repository.Department.GetDepartment(departmentId, trackChanges: false);
+            var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
             if (department == null)
             {
@@ -32,7 +32,7 @@ namespace TestProject.Controllers
                 return NotFound();
             }
 
-            var productsFromDb = _repository.Product.GetProducts(departmentId, trackChanges: false);
+            var productsFromDb = await _repository.Product.GetProductsAsync(departmentId, trackChanges: false);
 
 
             var productsDto = productsFromDb.Select(product => _mapper.Map<ProductDto>(product));
@@ -41,9 +41,9 @@ namespace TestProject.Controllers
         }
 
         [HttpGet("{id}", Name = "GetProductForDepartment")]
-        public IActionResult GetWorkerForDepartment(Guid departmentId, Guid id)
+        public async Task<IActionResult> GetWorkerForDepartment(Guid departmentId, Guid id)
         {
-            var department = _repository.Department.GetDepartment(departmentId, trackChanges: false);
+            var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
             if (department == null)
             {
@@ -51,7 +51,7 @@ namespace TestProject.Controllers
                 return NotFound();
             }
 
-            var productFromDb = _repository.Product.GetProduct(departmentId, id, trackChanges: false);
+            var productFromDb = await _repository.Product.GetProductAsync(departmentId, id, trackChanges: false);
 
             if (productFromDb == null)
             {
@@ -64,7 +64,7 @@ namespace TestProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProductForDepartment(Guid departmentId, [FromBody] CreateProductDto createProductDto)
+        public async Task<IActionResult> CreateProductForDepartment(Guid departmentId, [FromBody] CreateProductDto createProductDto)
         {
             if (createProductDto == null)
             {
@@ -78,7 +78,7 @@ namespace TestProject.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            var department = _repository.Department.GetDepartment(departmentId, trackChanges: false);
+            var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
             if (department == null)
             {
@@ -88,16 +88,16 @@ namespace TestProject.Controllers
 
             var product = _mapper.Map<Product>(createProductDto);
             _repository.Product.CreateProductForDepartment(departmentId, product);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var productToReturn = _mapper.Map<ProductDto>(product);
             return CreatedAtRoute("GetProductForDepartment", new { departmentId, id = productToReturn.Id }, productToReturn);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteProductForDepartment(Guid departmentId, Guid id)
+        public async Task<IActionResult> DeleteProductForDepartment(Guid departmentId, Guid id)
         {
-            var department = _repository.Department.GetDepartment(departmentId, trackChanges: false);
+            var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
             if (department == null)
             {
@@ -105,7 +105,7 @@ namespace TestProject.Controllers
                 return NotFound();
             }
 
-            var productForDepartment = _repository.Product.GetProduct(departmentId, id, trackChanges: false);
+            var productForDepartment = await _repository.Product.GetProductAsync(departmentId, id, trackChanges: false);
 
             if (productForDepartment == null)
             {
@@ -114,21 +114,21 @@ namespace TestProject.Controllers
             }
 
             _repository.Product.DeleteProduct(productForDepartment);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateProductForDepartment(Guid departmentId, Guid id, [FromBody] UpdateProductDto updateProductDto)
+        public async Task<IActionResult> UpdateProductForDepartment(Guid departmentId, Guid id, [FromBody] UpdateProductDto updateProductDto)
         {
-            if(updateProductDto == null)
+            if (updateProductDto == null)
             {
                 _logger.LogError("UpdateProductDto sent from client is null");
                 return BadRequest("UpdateProductDro is null");
             }
 
-            var departmentFromDb = _repository.Department.GetDepartment(departmentId, trackChanges: false);
+            var departmentFromDb = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
             if (!ModelState.IsValid)
             {
@@ -142,7 +142,7 @@ namespace TestProject.Controllers
                 return NotFound();
             }
 
-            var productFromDb = _repository.Product.GetProduct(departmentId, id, trackChanges: true);
+            var productFromDb = await _repository.Product.GetProductAsync(departmentId, id, trackChanges: true);
 
             if (productFromDb == null)
             {
@@ -150,32 +150,32 @@ namespace TestProject.Controllers
                 return NotFound();
             }
             _mapper.Map(updateProductDto, productFromDb);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPatch]
-        public IActionResult PartiallyUpdateProductForDepartment(Guid departmentId, Guid id, [FromBody] JsonPatchDocument<UpdateProductDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateProductForDepartment(Guid departmentId, Guid id, [FromBody] JsonPatchDocument<UpdateProductDto> patchDoc)
         {
-            if(patchDoc == null)
+            if (patchDoc == null)
             {
                 _logger.LogError("patchDoc object sent from client is null.");
                 return BadRequest("patchDoc object is null");
             }
 
 
-            var departmentFromDb = _repository.Department.GetDepartment(departmentId, trackChanges: false);
+            var departmentFromDb = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
 
-            if(departmentFromDb == null)
+            if (departmentFromDb == null)
             {
                 _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
                 return NotFound();
             }
 
-            var productFromDb = _repository.Product.GetProduct(departmentId, id, trackChanges: true);
-            if(productFromDb == null)
+            var productFromDb = await _repository.Product.GetProductAsync(departmentId, id, trackChanges: true);
+            if (productFromDb == null)
             {
                 _logger.LogInformation($"Product with id: {id} doesn't exist in the database");
                 return NotFound();
@@ -193,10 +193,8 @@ namespace TestProject.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            //patchDoc.ApplyTo(productToPatch);
-
             _mapper.Map(productToPatch, productFromDb);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
     }
