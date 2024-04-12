@@ -100,13 +100,43 @@ namespace TestProject.Controllers
 
             var productForDepartment = _repository.Product.GetProduct(departmentId, id, trackChanges: false);
 
-            if(productForDepartment == null)
+            if (productForDepartment == null)
             {
                 _logger.LogInformation($"Product with id: {id} doesn't exist in the database");
                 return NotFound();
             }
 
             _repository.Product.DeleteProduct(productForDepartment);
+            _repository.Save();
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateProductForDepartment(Guid departmentId, Guid id, [FromBody] UpdateProductDto updateProductDto)
+        {
+            if(updateProductDto == null)
+            {
+                _logger.LogError("UpdateProductDto sent from client is null");
+                return BadRequest("UpdateProductDro is null");
+            }
+
+            var departmentFromDb = _repository.Department.GetDepartment(departmentId, trackChanges: false);
+
+            if(departmentFromDb == null)
+            {
+                _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
+                return NotFound(); // TODO: CHANGE
+            }
+
+            var productFromDb = _repository.Product.GetProduct(departmentId, id, trackChanges: true);
+
+            if (productFromDb == null)
+            {
+                _logger.LogInformation($"Product with id: {id} doesn't exist in the database");
+                return NotFound();
+            }
+            _mapper.Map(updateProductDto, productFromDb);
             _repository.Save();
 
             return NoContent();
