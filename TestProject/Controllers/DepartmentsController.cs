@@ -58,6 +58,13 @@ namespace TestProject.Controllers
                 return BadRequest("CreateDepartmentDto object is null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid CreateDepartmentDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
+
             var department = _mapper.Map<Department>(createDepartmentDto);
 
             _repository.Department.CreateDepartment(department);
@@ -144,7 +151,13 @@ namespace TestProject.Controllers
 
             var departmentFromDb = _repository.Department.GetDepartment(id, trackChanges: true);
 
-            if(departmentFromDb == null)
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid CreateDepartmentDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
+            if (departmentFromDb == null)
             {
                 _logger.LogInformation($"Department with id: {id} doesn't exist in the database.");
                 return NotFound();

@@ -1,5 +1,6 @@
 using Contracts;
 using Entitties;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Serilog;
@@ -15,6 +16,10 @@ builder.Host.UseSerilog((context, configuration) =>
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

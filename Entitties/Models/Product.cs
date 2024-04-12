@@ -12,7 +12,7 @@ namespace Entitties.Models
         [Required(ErrorMessage = "Product Description is a required field.")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Product Weight is a required field.")]
+        [Range(0.001, double.MaxValue, ErrorMessage = "Weight is required and it can't be lower than 0.001 kg")]
         public double Weight { get; set; }
 
         public Guid DepartmentId { get; set; }

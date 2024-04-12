@@ -72,6 +72,12 @@ namespace TestProject.Controllers
                 return BadRequest("CreateProductDto object is null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid EmployeeForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
             var department = _repository.Department.GetDepartment(departmentId, trackChanges: false);
 
             if (department == null)
@@ -124,7 +130,13 @@ namespace TestProject.Controllers
 
             var departmentFromDb = _repository.Department.GetDepartment(departmentId, trackChanges: false);
 
-            if(departmentFromDb == null)
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid EmployeeForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
+            if (departmentFromDb == null)
             {
                 _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
                 return NotFound();
@@ -152,7 +164,10 @@ namespace TestProject.Controllers
                 return BadRequest("patchDoc object is null");
             }
 
+
             var departmentFromDb = _repository.Department.GetDepartment(departmentId, trackChanges: false);
+
+
             if(departmentFromDb == null)
             {
                 _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
@@ -168,7 +183,17 @@ namespace TestProject.Controllers
 
             var productToPatch = _mapper.Map<UpdateProductDto>(productFromDb);
 
-            patchDoc.ApplyTo(productToPatch);
+            patchDoc.ApplyTo(productToPatch, ModelState);
+
+            TryValidateModel(productToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+
+            //patchDoc.ApplyTo(productToPatch);
 
             _mapper.Map(productToPatch, productFromDb);
             _repository.Save();
