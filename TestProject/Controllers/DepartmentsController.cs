@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DTO;
 using Entitties.Models;
 using Microsoft.AspNetCore.Mvc;
+using TestProject.ModelBinders;
 
 namespace TestProject.Controllers
 {
@@ -46,10 +47,11 @@ namespace TestProject.Controllers
             return Ok(departmentDto);
         }
 
+
         [HttpPost]
-        public IActionResult CreateDepartment([FromBody]CreateDepartmentDto createDepartmentDto)
+        public IActionResult CreateDepartment([FromBody] CreateDepartmentDto createDepartmentDto)
         {
-            if(createDepartmentDto == null)
+            if (createDepartmentDto == null)
             {
                 _logger.LogError("CreateDepartmentDto object sent from client is null.");
                 return BadRequest("CreateDepartmentDto object is null");
@@ -61,8 +63,56 @@ namespace TestProject.Controllers
             _repository.Save();
 
             var departmentToReturn = _mapper.Map<DepartmentDTO>(department);
-            return CreatedAtRoute("DepartmentById", new { id = departmentToReturn.Id}, departmentToReturn);
+            return CreatedAtRoute("DepartmentById", new { id = departmentToReturn.Id }, departmentToReturn);
         }
 
+
+        [HttpGet("collection/({ids})", Name = "DepartmentCollection")]
+        public IActionResult GetDepartmentCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        {
+            if (ids == null)
+            {
+                _logger.LogError("Parameter ids is null");
+                return BadRequest("Parameter ids is null");
+            }
+
+            var departmentCollection = _repository.Department.GetByIds(ids, trackChanges: false);
+
+            if (ids.Count() != departmentCollection.Count())
+            {
+                _logger.LogError("Some ids are not valid in a collection");
+                return NotFound();
+            }
+
+            var departmentsToReturn = departmentCollection.Select(department => _mapper.Map<DepartmentDTO>(department));
+            return Ok(departmentsToReturn);
+        }
+
+        [HttpPost("collection")]
+
+        public IActionResult CreateDepartmentCollection([FromBody] IEnumerable<CreateDepartmentDto> departmentCollection)
+        {
+            if (departmentCollection == null)
+            {
+                _logger.LogError("Department collection sent from client is null.");
+                return BadRequest("Department collection is null");
+            }
+
+
+            var departments = _mapper.Map<IEnumerable<Department>>(departmentCollection);
+
+            foreach (var department in departments)
+            {
+                _repository.Department.CreateDepartment(department);
+            }
+
+            _repository.Save();
+
+            var departmentCollectionToReturn = _mapper.Map<IEnumerable<DepartmentDTO>>(departments);
+
+            var ids = string.Join(",", departmentCollectionToReturn.Select(d => d.Id));
+
+            return CreatedAtRoute("DepartmentCollection", new { ids }, departmentCollectionToReturn);
+        }
     }
 }
