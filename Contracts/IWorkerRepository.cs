@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entitties.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,7 @@ namespace Contracts
 {
     public interface IWorkerRepository
     {
+        Task<IEnumerable<Worker>> GetWorkersAsync(bool trackChanges);
+        Task<Worker> GetWorkerAsync(Guid id, bool trackChanges);
     }
 }

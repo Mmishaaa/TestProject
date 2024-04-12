@@ -27,7 +27,19 @@ namespace TestProject.Controllers
         {
             var departments = await _repository.Department.GetAllDepartmentsAsync(trackChanges: false);
 
-            var departmentsDto = departments.Select(department => _mapper.Map<DepartmentDTO>(department));
+            //var departmentsWorkers = departments.Select(department => _mapper.Map<WorkerDto>(department.Workers));
+
+            //var departmentsDto = departmentsWorkers.Select(department => _mapper.Map<DepartmentDTO>(department));
+
+            var departmentsDto = departments.Select(department =>
+            {
+                var workersDto = department.Workers.Select(worker => _mapper.Map<WorkerDtoForDepartment>(worker)).ToList();
+
+                var departmentDto = _mapper.Map<DepartmentDTO>(department);
+                departmentDto.Workers = workersDto;
+
+                return departmentDto;
+            });
 
             return Ok(departmentsDto);
         }
@@ -45,6 +57,8 @@ namespace TestProject.Controllers
             }
 
             var departmentDto = _mapper.Map<DepartmentDTO>(department);
+            departmentDto.Workers = department.Workers.Select(worker => _mapper.Map<WorkerDtoForDepartment>(worker));
+
             return Ok(departmentDto);
         }
 

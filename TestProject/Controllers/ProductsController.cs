@@ -22,7 +22,7 @@ namespace TestProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetWorkersForDepartment(Guid departmentId)
+        public async Task<IActionResult> GetProductsForDepartment(Guid departmentId)
         {
             var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
@@ -41,7 +41,7 @@ namespace TestProject.Controllers
         }
 
         [HttpGet("{id}", Name = "GetProductForDepartment")]
-        public async Task<IActionResult> GetWorkerForDepartment(Guid departmentId, Guid id)
+        public async Task<IActionResult> GetProductForDepartment(Guid departmentId, Guid id)
         {
             var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
