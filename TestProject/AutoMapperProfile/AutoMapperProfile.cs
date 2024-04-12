@@ -13,6 +13,7 @@ namespace TestProject.AutoMapperProfile
             CreateMap<CreateDepartmentDto, Department>();
             CreateMap<CreateProductDto, Product>();
             CreateMap<UpdateProductDto, Product>();
+            CreateMap<UpdateDepartmentDto, Department>();
         }
     }
 }

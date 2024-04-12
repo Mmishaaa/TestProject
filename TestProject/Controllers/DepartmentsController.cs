@@ -120,13 +120,36 @@ namespace TestProject.Controllers
         {
             var departmentFromDb = _repository.Department.GetDepartment(id, trackChanges: false);
 
-            if(departmentFromDb == null)
+            if (departmentFromDb == null)
             {
                 _logger.LogInformation($"Departmnet with id: {id} doesn't exist in the database");
                 return NotFound();
             }
 
             _repository.Department.DeleteDepartment(departmentFromDb);
+            _repository.Save();
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateDepartment(Guid id, [FromBody] UpdateDepartmentDto updateDepartmentDto)
+        {
+            if (updateDepartmentDto == null)
+            {
+                _logger.LogError("updateDepartmentDto sent from client is null");
+                return BadRequest("updateDepartmentDto is null");
+            }
+
+            var departmentFromDb = _repository.Department.GetDepartment(id, trackChanges: true);
+
+            if(departmentFromDb == null)
+            {
+                _logger.LogInformation($"Department with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            _mapper.Map(updateDepartmentDto, departmentFromDb);
             _repository.Save();
 
             return NoContent();

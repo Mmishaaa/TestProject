@@ -126,7 +126,7 @@ namespace TestProject.Controllers
             if(departmentFromDb == null)
             {
                 _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
-                return NotFound(); // TODO: CHANGE
+                return NotFound();
             }
 
             var productFromDb = _repository.Product.GetProduct(departmentId, id, trackChanges: true);
