@@ -4,6 +4,7 @@ using Entities.DTO.Department;
 using Entities.DTO.Product;
 using Entities.DTO.Worker;
 using Entitties.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TestProject.Controllers
@@ -182,5 +183,44 @@ namespace TestProject.Controllers
 
         }
 
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PartiallyUpdateWorkerFromDepartment(Guid departmentId, Guid id, [FromBody] JsonPatchDocument<UpdateWorkerDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+
+            var departmentFromDb = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
+
+            if(departmentId == null)
+            {
+                _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
+                return NotFound();
+            }
+
+            var workerFromDb = await _repository.Worker.GetWorkerAsync(departmentId, id, trackChanges: true);
+
+            if(workerFromDb == null)
+            {
+                _logger.LogInformation($"Worker with id: {id} doesn't exist in the database");
+                return NotFound();
+            }
+
+            var workerToPatch = _mapper.Map<UpdateWorkerDto>(workerFromDb);
+
+            patchDoc.ApplyTo(workerToPatch, ModelState);
+            if(!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+
+            _mapper.Map(workerToPatch, workerFromDb);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
     }
 }
