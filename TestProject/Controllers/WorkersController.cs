@@ -43,7 +43,7 @@ namespace TestProject.Controllers
             return Ok(workersDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "WorkerById")]
 
         public async Task<IActionResult> GetWorker(Guid id)
         {
@@ -61,6 +61,36 @@ namespace TestProject.Controllers
 
             return Ok(workerDto);
         }
-      
+
+        [HttpPost]
+        public async Task<IActionResult> CreateWorker([FromBody] CreateWorkerDto createWorkerDto)
+        {
+            if(createWorkerDto == null)
+            {
+                _logger.LogError("CreateWorkerDto object sent from client is null.");
+                return BadRequest("CreateWorkerDto object is null");
+            }
+
+            if(!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid CreateWorkerDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
+            var workerDto = _mapper.Map<WorkerDto>(createWorkerDto);
+
+            var departmentsForWorker = createWorkerDto.Departments
+                                            .Select(department => _mapper.Map<DepartmentDtoForWorker>(department));
+            workerDto.Departments = departmentsForWorker;
+
+            var worker = _mapper.Map<Worker>(workerDto);
+
+            _repository.Worker.CreateWorker(worker);
+            await _repository.SaveAsync();
+
+            var workerToReturn = _mapper.Map<WorkerDto>(worker);
+            return CreatedAtRoute("WorkerById", new { id = workerToReturn.Id}, workerToReturn);
+
+        }
     }
 }

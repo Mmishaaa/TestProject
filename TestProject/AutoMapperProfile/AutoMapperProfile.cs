@@ -20,12 +20,14 @@ namespace TestProject.AutoMapperProfile
             CreateMap<UpdateProductDto, Product>().ReverseMap();
             CreateMap<UpdateDepartmentDto, Department>().ReverseMap();
             CreateMap<Worker, WorkerDtoForDepartment>().ReverseMap();
-            CreateMap<Department, DepartmentDtoForWorker>();
-            CreateMap<Worker, WorkerDto>();
+            CreateMap<Department, DepartmentDtoForWorker>().ReverseMap();
+            CreateMap<Worker, WorkerDto>().ReverseMap();
             CreateMap<Worker, CreateWorkerDtoForDepartment>();
             CreateMap<WorkerDtoForDepartment, CreateWorkerDto>().ReverseMap();
             CreateMap<CreateWorkerDtoForDepartment, WorkerDtoForDepartment>();
             CreateMap<CreateWorkerDtoForDepartment, Worker>();
+            CreateMap<CreateWorkerDto, WorkerDto>();
+            CreateMap<CreateDepartmentDtoForWorker, DepartmentDtoForWorker>();
         }
     }
 }
