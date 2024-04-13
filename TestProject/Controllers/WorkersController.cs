@@ -3,7 +3,6 @@ using Contracts;
 using Entities.DTO.Department;
 using Entities.DTO.Worker;
 using Entitties.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TestProject.Controllers
@@ -29,7 +28,7 @@ namespace TestProject.Controllers
         public async Task<IActionResult> GetWorkersForDepartment(Guid departmentId)
         {
             var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
-            if(department == null)
+            if (department == null)
             {
                 _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database.");
                 return NotFound();
@@ -81,7 +80,7 @@ namespace TestProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateWorker(Guid departmentId,[FromBody] CreateWorkerDto createWorkerDto)
+        public async Task<IActionResult> CreateWorker(Guid departmentId, [FromBody] CreateWorkerDto createWorkerDto)
         {
             if (createWorkerDto == null)
             {
@@ -105,9 +104,9 @@ namespace TestProject.Controllers
 
             //var workerDto = _mapper.Map<WorkerDto>(createWorkerDto);
 
-           /* var departmentsForWorker = createWorkerDto.Departments
-                                            .Select(department => _mapper.Map<DepartmentDtoForWorker>(department));
-            workerDto.Departments = departmentsForWorker;*/
+            /* var departmentsForWorker = createWorkerDto.Departments
+                                             .Select(department => _mapper.Map<DepartmentDtoForWorker>(department));
+             workerDto.Departments = departmentsForWorker;*/
 
             var worker = _mapper.Map<Worker>(createWorkerDto);
 
@@ -118,21 +117,29 @@ namespace TestProject.Controllers
             return CreatedAtRoute("GetWorkerForDepartment", new { departmentId, id = workerToReturn.Id }, workerToReturn);
         }
 
-        /*  [HttpDelete("{id}")]
-          public async Task<IActionResult> DeleteWorker(Guid id)
-          {
-              var workerFromDb = await _repository.Worker.GetWorkerAsync(id, trackChanges: false);
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteWorker(Guid departmentId, Guid id)
+        {
+            var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
-              if (workerFromDb == null)
-              {
-                  _logger.LogInformation($"Worker with id: {id} doesn't exist in the database");
-                  return NotFound();
-              }
+            if (department == null)
+            {
+                _logger.LogInformation($"Department with id {departmentId} doesn't exist in the database");
+                return NotFound();
+            }
 
-              _repository.Worker.DeleteWorker(workerFromDb);
-              await _repository.SaveAsync();
+            var workerFromDb = await _repository.Worker.GetWorkerAsync(departmentId, id, trackChanges: false);
 
-              return NoContent();
-          }*/
+            if (workerFromDb == null)
+            {
+                _logger.LogInformation($"Worker with id: {id} doesn't exist in the database");
+                return NotFound();
+            }
+
+            _repository.Worker.DeleteWorker(workerFromDb);
+            await _repository.SaveAsync();
+
+            return NoContent();
+        }
     }
 }
