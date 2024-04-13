@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DTO.Department;
+using Entities.DTO.Product;
 using Entities.DTO.Worker;
 using Entitties.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -141,5 +142,45 @@ namespace TestProject.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateWorkerForDepartment(Guid departmentId, Guid id, [FromBody] UpdateWorkerDto updateWorkerDto)
+        {
+            if (updateWorkerDto == null)
+            {
+                _logger.LogError("UpdateWorkerDto sent from client is null");
+                return BadRequest("UpdateWorkerDto is null");
+            }
+
+            var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid EmployeeForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
+
+            if (department == null)
+            {
+                _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
+                return NotFound();
+            }
+
+            var workerFromDb = await _repository.Worker.GetWorkerAsync(departmentId, id, trackChanges: true);
+
+            if (workerFromDb == null)
+            {
+                _logger.LogInformation($"Worker with id: {id} doesn't exist in the database");
+                return NotFound();
+            }
+
+            _mapper.Map(updateWorkerDto, workerFromDb);
+            await _repository.SaveAsync();
+
+            return NoContent();
+
+        }
+
     }
 }
