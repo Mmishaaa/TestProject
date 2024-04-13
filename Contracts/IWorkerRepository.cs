@@ -11,5 +11,7 @@ namespace Contracts
     {
         Task<IEnumerable<Worker>> GetWorkersAsync(bool trackChanges);
         Task<Worker> GetWorkerAsync(Guid id, bool trackChanges);
+
+        void CreateWorker(Worker worker);
     }
 }

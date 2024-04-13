@@ -11,15 +11,21 @@ namespace TestProject.AutoMapperProfile
     {
         public AutoMapperProfile()
         {
-            CreateMap<Department, DepartmentDTO>();
-            CreateMap<Product, ProductDto>();
-            CreateMap<CreateDepartmentDto, Department>();
-            CreateMap<CreateProductDto, Product>();
+            CreateMap<Department, DepartmentDTO>().ReverseMap();
+            CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<CreateDepartmentDto, Department>().ReverseMap();
+            CreateMap<CreateDepartmentDto, DepartmentDTO>();
+            CreateMap<CreateProductDto, Product>().ReverseMap();
+            CreateMap<CreateProductDto, ProductDto>();
             CreateMap<UpdateProductDto, Product>().ReverseMap();
             CreateMap<UpdateDepartmentDto, Department>().ReverseMap();
-            CreateMap<Worker, WorkerDtoForDepartment>();
+            CreateMap<Worker, WorkerDtoForDepartment>().ReverseMap();
             CreateMap<Department, DepartmentDtoForWorker>();
             CreateMap<Worker, WorkerDto>();
+            CreateMap<Worker, CreateWorkerDtoForDepartment>();
+            CreateMap<WorkerDtoForDepartment, CreateWorkerDto>().ReverseMap();
+            CreateMap<CreateWorkerDtoForDepartment, WorkerDtoForDepartment>();
+            CreateMap<CreateWorkerDtoForDepartment, Worker>();
         }
     }
 }

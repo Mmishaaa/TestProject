@@ -28,10 +28,6 @@ namespace TestProject.Controllers
         {
             var departments = await _repository.Department.GetAllDepartmentsAsync(trackChanges: false);
 
-            //var departmentsWorkers = departments.Select(department => _mapper.Map<WorkerDto>(department.Workers));
-
-            //var departmentsDto = departmentsWorkers.Select(department => _mapper.Map<DepartmentDTO>(department));
-
             var departmentsDto = departments.Select(department =>
             {
                 var workersDto = department.Workers.Select(worker => _mapper.Map<WorkerDtoForDepartment>(worker)).ToList();
@@ -79,8 +75,14 @@ namespace TestProject.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
+            var departmentDto = _mapper.Map<DepartmentDTO>(createDepartmentDto);
 
-            var department = _mapper.Map<Department>(createDepartmentDto);
+            var workersForDepartment = createDepartmentDto.Workers.Select(worker => _mapper.Map<WorkerDtoForDepartment>(worker));
+
+            departmentDto.Workers = workersForDepartment;
+
+            var department = _mapper.Map<Department>(departmentDto);
+
 
             _repository.Department.CreateDepartment(department);
             await _repository.SaveAsync();
@@ -90,8 +92,8 @@ namespace TestProject.Controllers
         }
 
 
-        [HttpGet("collection/({ids})", Name = "DepartmentCollection")]
-        public async Task<IActionResult> GetDepartmentCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        [HttpGet("collection", Name = "DepartmentCollection")]
+        public async Task<IActionResult> GetDepartmentCollection([FromQuery][ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             if (ids == null)
             {
@@ -107,8 +109,18 @@ namespace TestProject.Controllers
                 return NotFound();
             }
 
-            var departmentsToReturn = departmentCollection.Select(department => _mapper.Map<DepartmentDTO>(department));
-            return Ok(departmentsToReturn);
+            var departmentsDto = departmentCollection.Select(department =>
+            {
+                var workersDto = department.Workers.Select(worker => _mapper.Map<WorkerDtoForDepartment>(worker)).ToList();
+
+                var departmentDto = _mapper.Map<DepartmentDTO>(department);
+                departmentDto.Workers = workersDto;
+
+                return departmentDto;
+            });
+
+
+            return Ok(departmentsDto);
         }
 
         [HttpPost("collection")]
@@ -121,6 +133,11 @@ namespace TestProject.Controllers
                 return BadRequest("Department collection is null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid CreateDepartmentDto object");
+                return UnprocessableEntity(ModelState);
+            }
 
             var departments = _mapper.Map<IEnumerable<Department>>(departmentCollection);
 

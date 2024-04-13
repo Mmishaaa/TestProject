@@ -15,18 +15,22 @@ namespace Repository
 
         public async Task<IEnumerable<Department>> GetAllDepartmentsAsync(bool trackChanges) =>
            await FindAll(trackChanges)
+            .Include(d => d.Products)
             .Include(d => d.Workers)
             .OrderBy(d => d.Name)
             .ToListAsync();
 
         public async Task<Department?> GetDepartmentAsync(Guid id, bool trackChanges) =>
             await FindByCondition(d => d.Id.Equals(id), trackChanges)
+            .Include(d => d.Products)
             .Include(d => d.Workers)
             .SingleOrDefaultAsync();
 
         public void CreateDepartment(Department department) => Create(department);
         public async Task<IEnumerable<Department>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges) =>
             await FindByCondition(x => ids.Contains(x.Id), trackChanges)
+            .Include(d => d.Products)
+            .Include(d => d.Workers)
             .ToListAsync();
 
         public void DeleteDepartment(Department department) => Delete(department);

@@ -26,5 +26,7 @@ namespace Repository
             await FindByCondition(w => w.Id.Equals(id), trackChanges)
             .Include(w => w.Departments)
             .SingleOrDefaultAsync();
+
+        public void CreateWorker(Worker worker) => Create(worker);
     }
 }

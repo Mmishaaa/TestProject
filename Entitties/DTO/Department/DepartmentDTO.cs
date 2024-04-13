@@ -1,4 +1,5 @@
-﻿using Entities.DTO.Worker;
+﻿using Entities.DTO.Product;
+using Entities.DTO.Worker;
 using Entitties.Models;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Entities.DTO.Department
         public string Name { get; set; }
 
         public string Description { get; set; }
-
+        public IEnumerable<ProductDto> Products { get; set; }
         public IEnumerable<WorkerDtoForDepartment> Workers { get; set; }
     }
 }

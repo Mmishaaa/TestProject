@@ -4,12 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entities.DTO.Product;
-using Entities.DTO.Worker;
 
 namespace Entities.DTO.Department
 {
-    public class DepartmentManipulationDto
+    public class CreateDepartmentDtoForWorker
     {
         [Required(ErrorMessage = "Department Name is a required field.")]
 
@@ -21,10 +19,6 @@ namespace Entities.DTO.Department
 
         [Required(ErrorMessage = "Products (stored in Department) is a required field.")]
 
-
         public IEnumerable<CreateProductDto> Products { get; set; }
-
-        [Required(ErrorMessage = "Workers is a required field.")]
-        public IEnumerable<CreateWorkerDtoForDepartment> Workers { get; set; }
     }
 }
