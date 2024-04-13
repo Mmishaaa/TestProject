@@ -27,6 +27,7 @@ namespace TestProject.AutoMapperProfile
             CreateMap<CreateWorkerDtoForDepartment, WorkerDtoForDepartment>();
             CreateMap<CreateWorkerDtoForDepartment, Worker>();
             CreateMap<CreateWorkerDto, WorkerDto>();
+            CreateMap<CreateWorkerDto, Worker>();
             CreateMap<CreateDepartmentDtoForWorker, DepartmentDtoForWorker>();
         }
     }

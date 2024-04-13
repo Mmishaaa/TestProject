@@ -15,6 +15,6 @@ namespace Entities.DTO.Worker
 
         public int Age { get; set; }
 
-        public IEnumerable<CreateDepartmentDtoForWorker> Departments { get; set; }
+       // public IEnumerable<CreateDepartmentDtoForWorker> Departments { get; set; }
     }
 }

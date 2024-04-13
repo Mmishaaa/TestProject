@@ -9,9 +9,10 @@ namespace Contracts
 {
     public interface IWorkerRepository
     {
-        Task<IEnumerable<Worker>> GetWorkersAsync(bool trackChanges);
-        Task<Worker> GetWorkerAsync(Guid id, bool trackChanges);
+        Task<IEnumerable<Worker>> GetWorkersAsync(Guid deprtmentId, bool trackChanges);
+        Task<Worker> GetWorkerAsync(Guid deprtmentId, Guid id, bool trackChanges);
 
-        void CreateWorker(Worker worker);
+        void CreateWorkerForDepartment(Guid deprtmentId, Worker worker);
+        void DeleteWorker(Worker worker);
     }
 }

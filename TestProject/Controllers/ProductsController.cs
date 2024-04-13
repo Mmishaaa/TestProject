@@ -81,11 +81,11 @@ namespace TestProject.Controllers
 
             var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
-            if (department == null)
-            {
-                _logger.LogInformation($"Department with id: ${departmentId} doesn't exist in database");
-                return NotFound();
-            }
+                if (department == null)
+                {
+                    _logger.LogInformation($"Department with id: ${departmentId} doesn't exist in database");
+                    return NotFound();
+                }
 
             var product = _mapper.Map<Product>(createProductDto);
             _repository.Product.CreateProductForDepartment(departmentId, product);
