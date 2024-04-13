@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Entities.DTO.Product;
 
-namespace Entities.DTO
+namespace Entities.DTO.Department
 {
-    public class UpdateDepartmentDto
+    public class DepartmentManipulationDto
     {
         [Required(ErrorMessage = "Department Name is a required field.")]
 

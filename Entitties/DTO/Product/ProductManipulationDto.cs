@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DTO
+namespace Entities.DTO.Product
 {
-    public class UpdateProductDto
+    public class ProductManipulationDto
     {
         [Required(ErrorMessage = "Product Name is a required field.")]
         public string Name { get; set; }
@@ -19,3 +19,4 @@ namespace Entities.DTO
         public double Weight { get; set; }
     }
 }
+

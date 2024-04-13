@@ -1,4 +1,5 @@
-﻿using Entitties.Models;
+﻿using Entities.DTO.Worker;
+using Entitties.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DTO
+namespace Entities.DTO.Department
 {
     public class DepartmentDTO
     {
@@ -16,6 +17,6 @@ namespace Entities.DTO
 
         public string Description { get; set; }
 
-        public IEnumerable <WorkerDtoForDepartment> Workers { get; set; }
+        public IEnumerable<WorkerDtoForDepartment> Workers { get; set; }
     }
 }

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Entities.DTO.Department;
 
-namespace Entities.DTO
+namespace Entities.DTO.Worker
 {
-    public class WorkerDtoForDepartment
+    public class WorkerDto
     {
         public Guid Id { get; set; }
 
@@ -17,5 +17,6 @@ namespace Entities.DTO
 
         public int Age { get; set; }
 
+        public IEnumerable<DepartmentDtoForWorker> Departments { get; set; }
     }
 }

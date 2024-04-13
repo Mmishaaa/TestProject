@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
-using Entities.DTO;
+using Entities.DTO.Department;
+using Entities.DTO.Worker;
 using Entitties.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
