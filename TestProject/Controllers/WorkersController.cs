@@ -195,7 +195,7 @@ namespace TestProject.Controllers
 
             var departmentFromDb = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
-            if(departmentId == null)
+            if(departmentFromDb == null)
             {
                 _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
                 return NotFound();
@@ -222,5 +222,7 @@ namespace TestProject.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+
+
     }
 }

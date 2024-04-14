@@ -222,6 +222,12 @@ namespace TestProject.Controllers
             var departmentToPatch = _mapper.Map<UpdateDepartmentDto>(departmentFromDb);
             patchDoc.ApplyTo(departmentToPatch);
 
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+
             _mapper.Map(departmentToPatch, departmentFromDb);
 
             await _repository.SaveAsync();

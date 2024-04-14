@@ -12,7 +12,7 @@ using Moq;
 using TestProject.Controllers;
 namespace UnitTesting
 {
-    public class DepartmentServiceTests
+    public class DepartmentControllerTests
     {
         private readonly DepartmentsController _sut;
 
@@ -20,7 +20,7 @@ namespace UnitTesting
         private readonly Mock<ILogger<DepartmentsController>> _loggerMock = new Mock<ILogger<DepartmentsController>>();
         private readonly Mock<IMapper> _mapperMock = new Mock<IMapper>();
 
-        public DepartmentServiceTests()
+        public DepartmentControllerTests()
         {
             _sut = new DepartmentsController(_departmentRepoMock.Object, _loggerMock.Object, _mapperMock.Object);
         }
@@ -173,18 +173,6 @@ namespace UnitTesting
                     };
                 });
 
-            _mapperMock.Setup(x => x.Map<WorkerDtoForDepartment>(It.IsAny<Worker>()))
-                .Returns((Worker worker) =>
-                {
-                    return new WorkerDtoForDepartment
-                    {
-                        Id = worker.Id,
-                        FirstName = worker.FirstName,
-                        LastName = worker.LastName,
-                        Age = worker.Age
-                    };
-                });
-
             // Act
             var returnedResult = await _sut.GetDepartments();
 
@@ -192,7 +180,6 @@ namespace UnitTesting
             var okObjectResult = Assert.IsType<OkObjectResult>(returnedResult);
             var returnedDepartments = Assert.IsAssignableFrom<IEnumerable<DepartmentDTO>>(okObjectResult.Value).ToList();
             Assert.Equal(departmentsDto.Count(), returnedDepartments.Count());
-
         }
 
         [Fact]
@@ -289,8 +276,6 @@ namespace UnitTesting
         [Fact]
         private async Task CreateDepartment_ShouldReturnUnprocessableEntityResult_WhenCreateDepartmentDtoIsInvalid()
         {
-
-
             // Arrange
             var createDepartment = new CreateDepartmentDto
             {
@@ -351,7 +336,6 @@ namespace UnitTesting
         private async Task UpdateDepartment_ShouldUpdateDepartment_WhenUpdateDepartmentDtoIsValidAndDepartmentExists()
         {
             // Arrange
-
             var workerId = Guid.NewGuid();
             var productId = Guid.NewGuid();
             var departmentId = Guid.NewGuid();
@@ -395,7 +379,6 @@ namespace UnitTesting
         [Fact]
         private async Task UpdateDepartment_ShouldReturnBadRequest_WhenUpdateDepartmentDtoIsNull()
         {
-
             // Arrange
             UpdateDepartmentDto updateDepartmentDto = null;
 
@@ -448,7 +431,7 @@ namespace UnitTesting
         [Fact]
         private async Task UpdateDepartment_ShouldReturnNotFound_WhenDepartmentDoesNotExist()
         {
-            /// Arrange
+            // Arrange
             var updateDepartmentDto = new UpdateDepartmentDto
             {
                 Name = "Test",
@@ -473,7 +456,6 @@ namespace UnitTesting
         [Fact]
         private async Task PartiallyUpdateDepartment_ShouldReturnNoContent_WhenPatchDocIsValidAndDepartmentExists()
         {
-
             var workerId = Guid.NewGuid();
             var productId = Guid.NewGuid();
             var departmentId = Guid.NewGuid();
@@ -542,8 +524,7 @@ namespace UnitTesting
         [Fact]
         private async Task PartiallyUpdateDepartment_ShouldReturnNotFound_WhenDepartmentDoesNotExist()
         {
-            /// Arrange
-
+            // Arrange
             var newName = "Updated Department Name";
 
             var patchDoc = new JsonPatchDocument<UpdateDepartmentDto>();
@@ -557,6 +538,45 @@ namespace UnitTesting
 
             // Assert
             var returnedResult = Assert.IsType<NotFoundResult>(result);
+        }
+        [Fact]
+        public async Task PartiallyUpdateDepartment_ShouldReturnUnprocessableEntity_WhenModelStateIsInvalid()
+        {
+            // Arrange
+            var departmentId = Guid.NewGuid();
+
+            var patchDoc = new JsonPatchDocument<UpdateDepartmentDto>();
+            patchDoc.Replace(d => d.Name, "Updated Department");
+            patchDoc.Replace(d => d.Description, null); // Invalid: Description cannot be null
+
+            var departmentFromDb = new Department
+            {
+                Id = departmentId,
+                Name = "Test Department",
+                Description = "Department description"
+            };
+
+            var departmentToPatch = new UpdateDepartmentDto
+            {
+                Name = "Updated Department",
+                Description = null
+            };
+
+            _departmentRepoMock.Setup(repo => repo.Department.GetDepartmentAsync(departmentId, true))
+                .ReturnsAsync(departmentFromDb);
+
+            _mapperMock.Setup(mapper => mapper.Map<UpdateDepartmentDto>(departmentFromDb))
+                .Returns(departmentToPatch);
+
+            _sut.ModelState.AddModelError("Description", "The Description field is required.");
+
+            // Act
+            var result = await _sut.PartiallyUpdateDepartment(departmentId, patchDoc);
+
+            // Assert
+            var unprocessableEntityResult = Assert.IsType<UnprocessableEntityObjectResult>(result);
+            var modelStateDictionary = Assert.IsAssignableFrom<SerializableError>(unprocessableEntityResult.Value);
+            Assert.True(modelStateDictionary.ContainsKey("Description"));
         }
     }
 }
