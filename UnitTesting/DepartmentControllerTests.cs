@@ -356,11 +356,6 @@ namespace UnitTesting
             {
                 Name = "Test",
                 Description = "Description",
-                Products = new List<CreateProductDto>
-                {
-                   new CreateProductDto { Name = "Product1", Description = "Product1.1", Weight = 0.3 }
-                },
-                Workers = new List<CreateWorkerDtoForDepartment> { new CreateWorkerDtoForDepartment { FirstName = "Worker 1", LastName = "Worker 1.1", Age = 20 } }
             };
 
             _mapperMock.Setup(mapper => mapper.Map(updateDepartmentDto, departmentFromDb)).Verifiable();
@@ -414,7 +409,6 @@ namespace UnitTesting
             {
                 Name = "Test",
                 Description = "Description",
-                Workers = new List<CreateWorkerDtoForDepartment> { new CreateWorkerDtoForDepartment { FirstName = "Worker 1", LastName = "Worker 1.1", Age = 20 } }
             };
 
             _departmentRepoMock.Setup(repo => repo.Department.GetDepartmentAsync(departmentId, true))
@@ -436,11 +430,6 @@ namespace UnitTesting
             {
                 Name = "Test",
                 Description = "Description",
-                Products = new List<CreateProductDto>
-                {
-                   new CreateProductDto { Name = "Product1", Description = "Product1.1", Weight = 0.3 }
-                },
-                Workers = new List<CreateWorkerDtoForDepartment> { new CreateWorkerDtoForDepartment { FirstName = "Worker 1", LastName = "Worker 1.1", Age = 20 } }
             };
 
             _departmentRepoMock.Setup(repo => repo.Department.GetDepartmentAsync(Guid.NewGuid(), true))
@@ -480,14 +469,10 @@ namespace UnitTesting
             _mapperMock.Setup(x => x.Map<UpdateDepartmentDto>(It.IsAny<Department>()))
                  .Returns((Department department) =>
                  {
-                     var workersDto = department.Workers.Select(worker => _mapperMock.Object.Map<CreateWorkerDtoForDepartment>(worker)).ToList();
-                     var productsDto = department.Products.Select(product => _mapperMock.Object.Map<CreateProductDto>(product)).ToList();
                      return new UpdateDepartmentDto
                      {
                          Name = department.Name,
                          Description = department.Description,
-                         Products = productsDto,
-                         Workers = workersDto
                      };
                  });
 

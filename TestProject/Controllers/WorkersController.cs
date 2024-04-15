@@ -212,6 +212,8 @@ namespace TestProject.Controllers
 
             patchDoc.ApplyTo(workerToPatch, ModelState);
 
+            TryValidateModel(workerToPatch);
+
             if (!ModelState.IsValid)
             {
                 _logger.LogError("Invalid model state for the patch document");

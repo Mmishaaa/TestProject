@@ -11,7 +11,7 @@ namespace TestProject.AutoMapperProfile
     {
         public AutoMapperProfile()
         {
-            CreateMap<Department, DepartmentDTO>();
+            CreateMap<Department, DepartmentDTO>().ReverseMap();
             CreateMap<Product, ProductDto>().ReverseMap();
             CreateMap<CreateDepartmentDto, Department>().ReverseMap();
             CreateMap<CreateDepartmentDto, DepartmentDTO>();

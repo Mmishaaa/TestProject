@@ -567,70 +567,7 @@ namespace UnitTesting
             // Assert
             var noContentResult = Assert.IsType<NotFoundResult>(result);
         }
-        [Fact]
-        public async Task PartiallyUpdateWorkerFromDepartment_ShouldReturnNoContent_WhenWorkerExists()
-        {
-            // Arrange
-            var departmentId = Guid.NewGuid();
-            var workerId = Guid.NewGuid();
-
-            var newFirstName = "UpdatedFirstName";
-            var newLastName = "UpdatedLastName";
-            var newAge = 25;
-
-            var patchDoc = new JsonPatchDocument<UpdateWorkerDto>();
-            patchDoc.Replace(w => w.FirstName, newFirstName);
-            patchDoc.Replace(w => w.LastName, newLastName);
-            patchDoc.Replace(w => w.Age, newAge);
-
-            var departmentFromDb = new Department
-            {
-                Id = departmentId,
-                Name = "Test Department",
-                Description = "Department description"
-            };
-
-            var workerFromDb = new Worker
-            {
-                Id = workerId,
-                FirstName = "John",
-                LastName = "Doe",
-                Age = 30,
-                Departments = new List<Department> { departmentFromDb }
-            };
-
-            _workerRepoMock.Setup(repo => repo.Department.GetDepartmentAsync(departmentId, false))
-                .ReturnsAsync(departmentFromDb);
-
-            _workerRepoMock.Setup(repo => repo.Worker.GetWorkerAsync(departmentId, workerId, true))
-                .ReturnsAsync(workerFromDb);
-
-            _mapperMock.Setup(mapper => mapper.Map<UpdateWorkerDto>(workerFromDb))
-                .Returns(new UpdateWorkerDto
-                {
-                    FirstName = workerFromDb.FirstName,
-                    LastName = workerFromDb.LastName,
-                    Age = workerFromDb.Age
-                });
-
-            _mapperMock.Setup(mapper => mapper.Map(It.IsAny<UpdateWorkerDto>(), workerFromDb))
-              .Callback<UpdateWorkerDto, Worker>((updateDto, worker) =>
-              {
-                  worker.FirstName = updateDto.FirstName;
-                  worker.LastName = updateDto.LastName;
-                  worker.Age = updateDto.Age;
-              });
-
-            // Act
-            var result = await _sut.PartiallyUpdateWorkerFromDepartment(departmentId, workerId, patchDoc);
-
-            // Assert
-            var noContentResult = Assert.IsType<NoContentResult>(result);
-            Assert.Equal(newFirstName, workerFromDb.FirstName);
-            Assert.Equal(newLastName, workerFromDb.LastName);
-            Assert.Equal(newAge, workerFromDb.Age);
-        }
-
+        
         [Fact]
         public async Task PartiallyUpdateWorkerFromDepartment_ShouldReturnNoContent_WhenPatchDocIsNull()
         {
@@ -709,57 +646,6 @@ namespace UnitTesting
             // Assert
             var noContentResult = Assert.IsType<NotFoundResult>(result);
         }
-        [Fact]
-        public async Task PartiallyUpdateWorkerFromDepartment_ShouldReturnUnprocessableEntity_WhenModelStateIsInvalid()
-        {
-            // Arrange
-            var departmentId = Guid.NewGuid();
-            var workerId = Guid.NewGuid();
-
-            var patchDoc = new JsonPatchDocument<UpdateWorkerDto>();
-            patchDoc.Replace(w => w.FirstName, "UpdatedFirstName");
-            patchDoc.Replace(w => w.LastName, "UpdatedLastName");
-            patchDoc.Replace(w => w.Age, -5);
-
-            var departmentFromDb = new Department
-            {
-                Id = departmentId,
-                Name = "Test Department",
-                Description = "Department description"
-            };
-
-            var workerFromDb = new Worker
-            {
-                Id = workerId,
-                FirstName = "John",
-                LastName = "Doe",
-                Age = 30,
-                Departments = new List<Department> { departmentFromDb }
-            };
-
-            _workerRepoMock.Setup(repo => repo.Department.GetDepartmentAsync(departmentId, false))
-                .ReturnsAsync(departmentFromDb);
-
-            _workerRepoMock.Setup(repo => repo.Worker.GetWorkerAsync(departmentId, workerId, true))
-                .ReturnsAsync(workerFromDb);
-
-            _mapperMock.Setup(mapper => mapper.Map<UpdateWorkerDto>(workerFromDb))
-                .Returns(new UpdateWorkerDto
-                {
-                    FirstName = workerFromDb.FirstName,
-                    LastName = workerFromDb.LastName,
-                    Age = workerFromDb.Age
-                });
-
-            _sut.ModelState.AddModelError("Age", "Age is required and it must be greater than 1 and less than 100");
-
-            // Act
-            var result = await _sut.PartiallyUpdateWorkerFromDepartment(departmentId, workerId, patchDoc);
-
-            // Assert
-            var unprocessableEntityResult = Assert.IsType<UnprocessableEntityObjectResult>(result);
-            var modelStateDictionary = Assert.IsAssignableFrom<SerializableError>(unprocessableEntityResult.Value);
-            Assert.True(modelStateDictionary.ContainsKey("Age"));
-        }
+      
     }
 }

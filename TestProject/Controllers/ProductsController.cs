@@ -81,11 +81,11 @@ namespace TestProject.Controllers
 
             var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
 
-                if (department == null)
-                {
-                    _logger.LogInformation($"Department with id: ${departmentId} doesn't exist in database");
-                    return NotFound();
-                }
+            if (department == null)
+            {
+                _logger.LogInformation($"Department with id: ${departmentId} doesn't exist in database");
+                return NotFound();
+            }
 
             var product = _mapper.Map<Product>(createProductDto);
             _repository.Product.CreateProductForDepartment(departmentId, product);
@@ -155,46 +155,46 @@ namespace TestProject.Controllers
 
             return NoContent();
         }
-
-            [HttpPatch]
-            public async Task<IActionResult> PartiallyUpdateProductForDepartment(Guid departmentId, Guid id, [FromBody] JsonPatchDocument<UpdateProductDto> patchDoc)
+        
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PartiallyUpdateProductForDepartment(Guid departmentId, Guid id, [FromBody] JsonPatchDocument<UpdateProductDto> patchDoc)
+        {
+            if (patchDoc == null)
             {
-                if (patchDoc == null)
-                {
-                    _logger.LogError("patchDoc object sent from client is null.");
-                    return BadRequest("patchDoc object is null");
-                }
-
-                var departmentFromDb = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
-
-                if (departmentFromDb == null)
-                {
-                    _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
-                    return NotFound();
-                }
-
-                var productFromDb = await _repository.Product.GetProductAsync(departmentId, id, trackChanges: true);
-                if (productFromDb == null)
-                {
-                    _logger.LogInformation($"Product with id: {id} doesn't exist in the database");
-                    return NotFound();
-                }
-
-                var productToPatch = _mapper.Map<UpdateProductDto>(productFromDb);
-
-                patchDoc.ApplyTo(productToPatch, ModelState);
-
-                TryValidateModel(productToPatch);
-
-                if (!ModelState.IsValid)
-                {
-                    _logger.LogError("Invalid model state for the patch document");
-                    return UnprocessableEntity(ModelState);
-                }
-
-                _mapper.Map(productToPatch, productFromDb);
-                await _repository.SaveAsync();
-                return NoContent();
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
             }
+
+            var departmentFromDb = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
+
+            if (departmentFromDb == null)
+            {
+                _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
+                return NotFound();
+            }
+
+            var productFromDb = await _repository.Product.GetProductAsync(departmentId, id, trackChanges: true);
+            if (productFromDb == null)
+            {
+                _logger.LogInformation($"Product with id: {id} doesn't exist in the database");
+                return NotFound();
+            }
+
+            var productToPatch = _mapper.Map<UpdateProductDto>(productFromDb);
+
+            patchDoc.ApplyTo(productToPatch, ModelState);
+
+            TryValidateModel(productToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+
+            _mapper.Map(productToPatch, productFromDb);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
     }
 }
