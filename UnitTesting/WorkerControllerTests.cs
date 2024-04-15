@@ -454,22 +454,60 @@ namespace UnitTesting
 
             // Assert
             var noContentResult = Assert.IsType<NoContentResult>(result);
+            Assert.Equal(updateWorkerDto.FirstName,workerFromDb.FirstName);
+            Assert.Equal(updateWorkerDto.LastName,workerFromDb.LastName);
+            Assert.Equal(updateWorkerDto.Age,workerFromDb.Age);
         }
 
         [Fact]
-        public async Task UpdateWorkerForDepartment_ShouldReturnUnprocessableEntity_WhenUpdateWorkerDtoIsInvalid()
+        public async Task UpdateWorkerForDepartment_ShouldReturnBadRequest_WhenUpdateWorkerDtoIsNull()
         {
 
             // Arrange
             UpdateWorkerDto updateWorkerDto = null;
-
-            _sut.ModelState.AddModelError("LastName", "LastName is a required field.");
 
             // Act
             var result = await _sut.UpdateWorkerForDepartment(Guid.NewGuid(), Guid.NewGuid(), updateWorkerDto);
 
             // Assert
             var noContentResult = Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact] 
+        private async Task UpdateWorkerForDepartment_ShouldReturnUnprocessableEntity_WhenDtoIsNotValid()
+        {
+            /// Arrange
+            var workerId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
+            var departmentId = Guid.NewGuid();
+
+            var departmentFromDb = new Department
+            {
+                Id = departmentId,
+                Name = "Test",
+                Description = "Description",
+                Products = new List<Product>
+                {
+                   new Product { Id = productId, Name = "Product1", Description = "Product1.1", Weight = 0.3 }
+                },
+                Workers = new List<Worker> { new Worker { Id = workerId, FirstName = "Worker 1", LastName = "Worker 1.1", Age = 20 } }
+            };
+
+            var updateWorkerDto = new UpdateWorkerDto
+            {
+                FirstName = "Test",
+                Age = 20,
+            };
+
+            _workerRepoMock.Setup(repo => repo.Department.GetDepartmentAsync(departmentId, true))
+                .ReturnsAsync(departmentFromDb);
+            _sut.ModelState.AddModelError("LastName", "LastName is a required field.");
+
+            // Act
+            var result = await _sut.UpdateWorkerForDepartment(departmentId, workerId, updateWorkerDto);
+
+            // Assert
+            var createdAtRouteResult = Assert.IsType<UnprocessableEntityObjectResult>(result);
         }
 
         [Fact]

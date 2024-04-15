@@ -13,9 +13,9 @@ namespace TestProject.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
-        private readonly ILogger<DepartmentsController> _logger;
+        private readonly ILogger<ProductsController> _logger;
         private readonly IMapper _mapper;
-        public ProductsController(IRepositoryManager repository, ILogger<DepartmentsController> logger, IMapper mapper)
+        public ProductsController(IRepositoryManager repository, ILogger<ProductsController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
@@ -75,7 +75,7 @@ namespace TestProject.Controllers
 
             if (!ModelState.IsValid)
             {
-                _logger.LogError("Invalid EmployeeForCreationDto object");
+                _logger.LogError("Invalid createProductDto object");
                 return UnprocessableEntity(ModelState);
             }
 
@@ -156,47 +156,45 @@ namespace TestProject.Controllers
             return NoContent();
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> PartiallyUpdateProductForDepartment(Guid departmentId, Guid id, [FromBody] JsonPatchDocument<UpdateProductDto> patchDoc)
-        {
-            if (patchDoc == null)
+            [HttpPatch]
+            public async Task<IActionResult> PartiallyUpdateProductForDepartment(Guid departmentId, Guid id, [FromBody] JsonPatchDocument<UpdateProductDto> patchDoc)
             {
-                _logger.LogError("patchDoc object sent from client is null.");
-                return BadRequest("patchDoc object is null");
+                if (patchDoc == null)
+                {
+                    _logger.LogError("patchDoc object sent from client is null.");
+                    return BadRequest("patchDoc object is null");
+                }
+
+                var departmentFromDb = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
+
+                if (departmentFromDb == null)
+                {
+                    _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
+                    return NotFound();
+                }
+
+                var productFromDb = await _repository.Product.GetProductAsync(departmentId, id, trackChanges: true);
+                if (productFromDb == null)
+                {
+                    _logger.LogInformation($"Product with id: {id} doesn't exist in the database");
+                    return NotFound();
+                }
+
+                var productToPatch = _mapper.Map<UpdateProductDto>(productFromDb);
+
+                patchDoc.ApplyTo(productToPatch, ModelState);
+
+                TryValidateModel(productToPatch);
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid model state for the patch document");
+                    return UnprocessableEntity(ModelState);
+                }
+
+                _mapper.Map(productToPatch, productFromDb);
+                await _repository.SaveAsync();
+                return NoContent();
             }
-
-
-            var departmentFromDb = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges: false);
-
-
-            if (departmentFromDb == null)
-            {
-                _logger.LogInformation($"Department with id: {departmentId} doesn't exist in the database");
-                return NotFound();
-            }
-
-            var productFromDb = await _repository.Product.GetProductAsync(departmentId, id, trackChanges: true);
-            if (productFromDb == null)
-            {
-                _logger.LogInformation($"Product with id: {id} doesn't exist in the database");
-                return NotFound();
-            }
-
-            var productToPatch = _mapper.Map<UpdateProductDto>(productFromDb);
-
-            patchDoc.ApplyTo(productToPatch, ModelState);
-
-            TryValidateModel(productToPatch);
-
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the patch document");
-                return UnprocessableEntity(ModelState);
-            }
-
-            _mapper.Map(productToPatch, productFromDb);
-            await _repository.SaveAsync();
-            return NoContent();
-        }
     }
 }

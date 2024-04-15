@@ -212,7 +212,8 @@ namespace TestProject.Controllers
             var workerToPatch = _mapper.Map<UpdateWorkerDto>(workerFromDb);
 
             patchDoc.ApplyTo(workerToPatch, ModelState);
-            if(!ModelState.IsValid)
+
+            if (!ModelState.IsValid)
             {
                 _logger.LogError("Invalid model state for the patch document");
                 return UnprocessableEntity(ModelState);
