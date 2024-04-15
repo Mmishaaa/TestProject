@@ -22,6 +22,15 @@ namespace TestProject.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets All Products
+        /// </summary>
+        /// <returns>All products</returns>
+        /// <response code="200">returns all products</response>
+        /// <response code="404">if department does not exist</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
         [HttpGet]
         public async Task<IActionResult> GetProductsForDepartment(Guid departmentId)
         {
@@ -40,6 +49,17 @@ namespace TestProject.Controllers
 
             return Ok(productsDto);
         }
+
+        /// <summary>
+        /// Gets a specific product from department.
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="id"></param>
+        /// <returns>a specific product from department.t</returns>
+        /// <response code="200">returns specific product</response>
+        /// <response code="404">If product/department does not exist</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
 
         [HttpGet("{id}", Name = "GetProductForDepartment")]
         public async Task<IActionResult> GetProductForDepartment(Guid departmentId, Guid id)
@@ -63,6 +83,32 @@ namespace TestProject.Controllers
             var product = _mapper.Map<ProductDto>(productFromDb);
             return Ok(product);
         }
+
+        /// <summary>
+        /// Creates a product for department
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="createProductDto"></param>
+        /// <returns>A newly created product</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///         POST /api/departments/{departmentId}/products
+        ///         {
+        ///             "name": "string",
+        ///             "description": "string",
+        ///             "weight": 0.001
+        ///         }
+        /// 
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the dto is null</response>
+        /// <response code="404">If department does not exist</response>
+        /// <response code="422">If the dto is invalid</response>
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
 
         [HttpPost]
         public async Task<IActionResult> CreateProductForDepartment(Guid departmentId, [FromBody] CreateProductDto createProductDto)
@@ -95,6 +141,18 @@ namespace TestProject.Controllers
             return CreatedAtRoute("GetProductForDepartment", new { departmentId, id = productToReturn.Id }, productToReturn);
         }
 
+        /// <summary>
+        /// Deletes a specific product from department.
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="404">If department does not exist</response>
+        /// <response code="404">If product does not exist</response>
+        /// <response code="204">successfully deleted</response>
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProductForDepartment(Guid departmentId, Guid id)
         {
@@ -119,6 +177,33 @@ namespace TestProject.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Updates a product from department.
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="id"></param>
+        /// <param name="updateProductDto"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///         Put /api/departments/{departmentId}/products/{id}
+        ///        {
+        ///             "name": "string",
+        ///             "description": "string",
+        ///             "weight": 0.001
+        ///         }
+        /// 
+        /// </remarks>
+        /// <response code="204">Successfully updated</response>
+        /// <response code="400">If the dto is null</response>
+        /// <response code="422">If the dto is invalid</response>
+        /// <response code="404">If department / product does not exist</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProductForDepartment(Guid departmentId, Guid id, [FromBody] UpdateProductDto updateProductDto)
@@ -155,7 +240,37 @@ namespace TestProject.Controllers
 
             return NoContent();
         }
-        
+
+        /// <summary>
+        /// Partially updates product from department.
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="id"></param>
+        /// <param name="patchDoc"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///       [
+        ///               {
+        ///                 "operationType": 0,
+        ///                 "path": "string",
+        ///                 "op": "string",
+        ///                 "from": "string",
+        ///                 "value": "string"
+        ///             }
+        ///       ]
+        /// 
+        /// </remarks>
+        /// <response code="204">Successfully updated</response>
+        /// <response code="400">If the patchdoc is null</response>
+        /// <response code="422">If the patchdoc is invalid</response>
+        /// <response code="404">If department / product does not exist</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
         [HttpPatch("{id}")]
         public async Task<IActionResult> PartiallyUpdateProductForDepartment(Guid departmentId, Guid id, [FromBody] JsonPatchDocument<UpdateProductDto> patchDoc)
         {

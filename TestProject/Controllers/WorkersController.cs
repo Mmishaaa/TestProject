@@ -25,6 +25,15 @@ namespace TestProject.Controllers
         }
 
 
+        /// <summary>
+        /// Gets All Workers
+        /// </summary>
+        /// <returns>All workers</returns>
+        /// <response code="200">returns all workers</response>
+        /// <response code="404">if department does not exist</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
         [HttpGet]
         public async Task<IActionResult> GetWorkersForDepartment(Guid departmentId)
         {
@@ -36,8 +45,6 @@ namespace TestProject.Controllers
             }
 
             var workers = await _repository.Worker.GetWorkersAsync(departmentId, trackChanges: false);
-
-            //var workers = await _repository.Worker.GetWorkersAsync(trackChanges: false);
 
             var workersDto = workers.Select(worker =>
             {
@@ -52,6 +59,17 @@ namespace TestProject.Controllers
 
             return Ok(workersDto);
         }
+
+        /// <summary>
+        /// Gets a specific worker from department.
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="id"></param>
+        /// <returns>a specific worker from department.t</returns>
+        /// <response code="200">returns specific worker</response>
+        /// <response code="404">If department / worker does not exist</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
 
         [HttpGet("{id}", Name = "GetWorkerForDepartment")]
 
@@ -80,6 +98,32 @@ namespace TestProject.Controllers
             return Ok(workerDto);
         }
 
+        /// <summary>
+        /// Creates a worker for department
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="createWorkerDto"></param>
+        /// <returns>A newly created worker</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///         POST /api/departments/{departmentId}/workers
+        ///         {
+        ///             "firstname": "string",
+        ///             "lastname": "string",
+        ///             "age": 25
+        ///         }
+        /// 
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the dto is null</response>
+        /// <response code="404">If department does not exist</response>
+        /// <response code="422">If the dto is invalid</response>
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+
         [HttpPost]
         public async Task<IActionResult> CreateWorker(Guid departmentId, [FromBody] CreateWorkerDto createWorkerDto)
         {
@@ -103,12 +147,6 @@ namespace TestProject.Controllers
                 return NotFound();
             }
 
-            //var workerDto = _mapper.Map<WorkerDto>(createWorkerDto);
-
-            /* var departmentsForWorker = createWorkerDto.Departments
-                                             .Select(department => _mapper.Map<DepartmentDtoForWorker>(department));
-             workerDto.Departments = departmentsForWorker;*/
-
             var worker = _mapper.Map<Worker>(createWorkerDto);
 
             _repository.Worker.CreateWorkerForDepartment(departmentId, worker);
@@ -117,6 +155,18 @@ namespace TestProject.Controllers
             var workerToReturn = _mapper.Map<WorkerDto>(worker);
             return CreatedAtRoute("GetWorkerForDepartment", new { departmentId, id = workerToReturn.Id }, workerToReturn);
         }
+
+        /// <summary>
+        /// Deletes a specific worker from department.
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="404">If department does not exist</response>
+        /// <response code="404">If worker does not exist</response>
+        /// <response code="204">successfully deleted</response>
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWorker(Guid departmentId, Guid id)
@@ -142,6 +192,33 @@ namespace TestProject.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Updates a worker from department.
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="id"></param>
+        /// <param name="updateWorkerDto"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///         Put /api/departments/{departmentId}/workers/{id}
+        ///         {
+        ///             "firstname": "string",
+        ///             "lastname": "string",
+        ///             "age": 25
+        ///         }
+        /// 
+        /// </remarks>
+        /// <response code="204">Successfully updated</response>
+        /// <response code="400">If the dto is null</response>
+        /// <response code="422">If the dto is invalid</response>
+        /// <response code="404">If department / worker does not exist</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateWorkerForDepartment(Guid departmentId, Guid id, [FromBody] UpdateWorkerDto updateWorkerDto)
@@ -182,6 +259,35 @@ namespace TestProject.Controllers
 
         }
 
+        /// <summary>
+        /// Partially updates worker from department.
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="id"></param>
+        /// <param name="patchDoc"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///       [
+        ///               {
+        ///                 "operationType": 0,
+        ///                 "path": "string",
+        ///                 "op": "string",
+        ///                 "from": "string",
+        ///                 "value": "string"
+        ///             }
+        ///       ]
+        /// 
+        /// </remarks>
+        /// <response code="204">Successfully updated</response>
+        /// <response code="400">If the patchdoc is null</response>
+        /// <response code="422">If the patchdoc is invalid</response>
+        /// <response code="404">If department / worker does not exist</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
 
         [HttpPatch("{id}")]
         public async Task<IActionResult> PartiallyUpdateWorkerFromDepartment(Guid departmentId, Guid id, [FromBody] JsonPatchDocument<UpdateWorkerDto> patchDoc)
