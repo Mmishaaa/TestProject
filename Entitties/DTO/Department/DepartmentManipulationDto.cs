@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Entities.DTO.Product;
+﻿using System.ComponentModel.DataAnnotations;
 using Entities.DTO.Worker;
 
 namespace Entities.DTO.Department

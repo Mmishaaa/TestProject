@@ -1,10 +1,4 @@
-﻿using Entities.DTO.Department;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Entities.DTO.Worker
 {
@@ -20,6 +14,5 @@ namespace Entities.DTO.Worker
         [Range(1, 100, ErrorMessage = "Age is required and it must be greater than 1 and less than 100")]
         public int Age { get; set; }
 
-       // public IEnumerable<CreateDepartmentDtoForWorker> Departments { get; set; }
     }
 }

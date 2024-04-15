@@ -24,7 +24,6 @@ namespace Entitties
                 .UsingEntity<DepartmentWorker>(
                     j => j.ToTable("DepartmentWorker")
                         .HasData(
-                            //new DepartmentWorker { DepartmentsId = new Guid("913a0fdb-359c-4eae-a0e8-227c7fd920c3"), WorkersId = new Guid("c30d6b8e-0917-4186-a9af-3cab2e297ff2") },
                             new DepartmentWorker { DepartmentsId = new Guid("913a0fdb-359c-4eae-a0e8-227c7fd920c3"), WorkersId = new Guid("c30d6b8e-0917-4186-a9af-3cab2e297ff2") },
                             new DepartmentWorker { DepartmentsId = new Guid("913a0fdb-359c-4eae-a0e8-227c7fd920c3"), WorkersId = new Guid("ad11d22c-e5db-471a-9693-b1b0716f98aa") },
                             new DepartmentWorker { DepartmentsId = new Guid("913a0fdb-359c-4eae-a0e8-227c7fd920c3"), WorkersId = new Guid("3a266ee0-f9bc-4738-9960-b00f583c8850") },

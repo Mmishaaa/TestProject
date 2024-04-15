@@ -3,7 +3,6 @@ using Contracts;
 using Entities.DTO.Department;
 using Entities.DTO.Worker;
 using Entitties.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
