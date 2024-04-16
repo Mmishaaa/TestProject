@@ -8,12 +8,12 @@
 
 - ## 📦 How to install Warehouse
 
-- You should be in **[develop]https://github.com/Mmishaaa/TestProject/tree/develop** branch.
+- You should be in **[develop](https://github.com/Mmishaaa/TestProject/tree/develop)** branch.
 
 You can clone this repository:
 
 ```
-(https://github.com/Mmishaaa/TestProject.git)
+https://github.com/Mmishaaa/TestProject.git
 ```
 
 Or download it by clicking the green "Code" button and then "Download ZIP". Open it in your IDE.
