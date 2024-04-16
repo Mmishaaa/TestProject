@@ -8,7 +8,7 @@
 
 - ## 📦 How to install Warehouse
 
-- You should be in **[develop](https://github.com/Mmishaaa/TestProject/tree/develop)** branch.
+- You should be in **[develop]https://github.com/Mmishaaa/TestProject/tree/develop** branch.
 
 You can clone this repository:
 
@@ -18,9 +18,9 @@ You can clone this repository:
 
 Or download it by clicking the green "Code" button and then "Download ZIP". Open it in your IDE.
 
-Before starting you need to set up database connectionString in appsettings.json file
+Before starting you need to set up database connection string in appsettings.json file
 
-Creating and seeding database:
+Creating and seeding database(Package Manager Console):
 ```
 update-database
 ```
