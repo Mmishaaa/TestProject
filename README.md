@@ -29,25 +29,26 @@ update-database
 Use  **[link](https://learn.microsoft.com/en-us/aspnet/core/security/docker-compose-https?view=aspnetcore-8.0)** 
 to be sure you have generated certificate and configure local machine
 
-1)TO do it run in powershell(In the commands, replace CREDENTIAL_PLACEHOLDER with your password.)
+1) TO do it run in powershell(In the commands, replace CREDENTIAL_PLACEHOLDER with your password.)
 ```
 dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\aspnetapp.pfx"  -p CREDENTIAL_PLACEHOLDER
 dotnet dev-certs https --trust
 ```
 Then check if the password specified in the docker compose file(ASPNETCORE_Kestrel__Certificates__Default__Password) matches the password used for the certificate.
 
-Then check the connectionString in appsettings.json, 
+2) Then check the connectionString in appsettings.json, 
 ```
   the password should be the same as SA_PASSWORD in docker-compose for mssql service
   server should be mssql_db(service name for db container in docker-compose)
 ```
-1) Be sure that docker desktop is running on your machine
+3) Be sure that docker desktop is running on your machine
 
-2) Run docker container using powershell
+4) Run docker container using powershell
 ```
 docker-compose up
 docker-compose up -d (to run in detached mode)
 ```
 Or you can start by clicking docker-compose button in visual studio
-3)go to [https://localhost:8080/swagger/index.html](https://localhost:8080/swagger/index.html)
+
+5)go to [https://localhost:8080/swagger/index.html](https://localhost:8080/swagger/index.html)
 
