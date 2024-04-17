@@ -29,7 +29,7 @@ update-database
 Use  **[link](https://learn.microsoft.com/en-us/aspnet/core/security/docker-compose-https?view=aspnetcore-8.0)** 
 to be sure you have generated certificate and configure local machine
 
-1)TO do it run in powershell(In the commands, replace CREDENTIAL_PLACEHOLDER with your password.)
+1)To do it run in powershell(In the commands, replace CREDENTIAL_PLACEHOLDER with your password.)
 ```
 dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\aspnetapp.pfx"  -p CREDENTIAL_PLACEHOLDER
 dotnet dev-certs https --trust
@@ -49,5 +49,6 @@ docker-compose up
 docker-compose up -d (to run in detached mode)
 ```
 Or you can start by clicking docker-compose button in visual studio
+
 3)go to [https://localhost:8080/swagger/index.html](https://localhost:8080/swagger/index.html)
 
