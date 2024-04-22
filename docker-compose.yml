@@ -1,0 +1,39 @@
+version: '3.4'
+
+networks:
+  my-network:
+    driver: bridge
+services:
+  testproject:
+    image: ${DOCKER_REGISTRY-}testproject
+    build:
+      context: .
+      dockerfile: TestProject/Dockerfile
+    ports:
+        - "8080:443"
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=https://+:443;http://+:80
+        - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+        - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+        - ~/.aspnet/https:/https:ro
+    networks:
+        - my-network
+    depends_on:
+        - mssql_db
+  mssql_db:
+    container_name: mssql_db
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    restart: always
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Pass@word"
+    ports:
+      - 1433:1433
+    volumes:
+      - mssql-data:/var/opt/mssql
+    networks:
+      - my-network
+volumes:
+  mssql-data:
