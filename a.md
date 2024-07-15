@@ -224,19 +224,23 @@ kubectl get namespace
 ```
 kubectl get service --namespace=<namespace_name>
 ```
-7) Delete deployment
+7) Delete namespace
+```
+ kubectl delete namespace ingress-nginx
+```
+8) Delete deployment
 ```
 kubectl delete deployment <deployment-name>
 ```
-8) Delete service
+9) Delete service
 ```
 kubectl delete service <service-name>
 ```
-8) Delete pod
+10) Delete pod
 ```
 kubectl delete pod <pod-name>
 ```
-8) Uninstall the FusionAuth chart
+11) Uninstall the FusionAuth chart
 ```
 helm uninstall my-release
 ```
