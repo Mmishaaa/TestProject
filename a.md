@@ -253,3 +253,11 @@ kubectl delete pod <pod-name>
 ```
 helm uninstall my-release
 ```
+12) Delete all deployments
+```
+kubectl delete deployments --all
+```
+13) Delete all services
+```
+kubectl delete services --all
+```
