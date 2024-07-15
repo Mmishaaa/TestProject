@@ -24,7 +24,7 @@ docker-compose up
 docker-compose up -d (to run in detached mode)
 ```
 - # K8S
-- ## Run this command
+- ## 1.Run this command
 ```
 kubectl apply -f  .\K8S\TinderMssqlDb\local-pvc.yml,.\K8S\TinderMssqlDb\mssql-plat-depl.yml,.\K8S\FusionAuthPostgresDb\local-pvc.postgress.yml,.\K8S\FusionAuthPostgresDb\postgres-plat-depl.yml,.\K8S\SubscriptionMongoDb\local-pvc.mongo.yml,.\K8S\SubscriptionMongoDb\mongo-plat-depl.yml,.\K8S\Rabbitmq\rabbitmq-depl.yml,.\K8S\Redis\redis-plat-depl.yml,.\K8S\TinderService\tinder-np-srv.yml,.\K8S\TinderService\tinder-depl.yml,.\K8S\SubscriptionService\subscription-np-srv.yml,.\K8S\SubscriptionService\subscription-depl.yml,.\K8S\NotificationService\notification-np-srv.yml,.\K8S\NotificationService\notification-depl.yml,.\K8S\GraphqlService\graphql-np-srv.yml,.\K8S\GraphqlService\graphql-depl.yml
 ```
@@ -102,7 +102,7 @@ kubectl apply -f  .\K8S\GraphqlService\graphql-np-srv.yml
 ```
 kubectl apply -f  .\K8S\GraphqlService\graphql-depl.yml
 ```
-- ## Set up FusionAuth service 
+- ## 2.Set up FusionAuth service 
 1) Add a chart repository
 ```
 helm repo add fusionauth https://fusionauth.github.io/charts
@@ -160,7 +160,7 @@ my-release-fusionauth   1/1     1            1           4m16s   fusionauth   fu
 Email: tinder@gmail.com
 Password: 12345aA!
 ```
-- ## Adding an API Gateway
+- ## 3.Adding an API Gateway
 1) Add new host configuration
 ```
 cd C:\Windows\System32\drivers\etc\
