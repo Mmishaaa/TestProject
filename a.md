@@ -24,79 +24,6 @@ docker-compose up
 docker-compose up -d (to run in detached mode)
 ```
 - # K8S
-- ## Set up mssql db for tinderService
-1) Create mssql persistent volume claim
-```
-kubectl apply -f  .\K8S\TinderMssqlDb\local-pvc.yml
-```
-2) Creste mssql instance
-```
-kubectl apply -f  .\K8S\TinderMssqlDb\mssql-plat-depl.yml
-```
-- ## Set up postgres db for fusionAuth
-1) Create postgres persistent volume claim
-```
-kubectl apply -f  .\K8S\FusionAuthPostgresDb\local-pvc.postgress.yml
-```
-2) Create postgres instance
-```
-kubectl apply -f  .\K8S\FusionAuthPostgresDb\postgres-plat-depl.yml
-```
-- ## Set up mongo db for subscriptionService
-1) Create mongo persistent volume claim
-```
-kubectl apply -f  .\K8S\SubscriptionMongoDb\local-pvc.mongo.yml
-```
-2) Create mongo instance
-```
-kubectl apply -f  .\K8S\SubscriptionMongoDb\mongo-plat-depl.yml
-```
-- ## Set up rabbitmq service
-1) Create rabbitmq instance
-```
-kubectl apply -f .\K8S\Rabbitmq\rabbitmq-depl.yml
-```
-- ## Set up redis service
-1) Create redis instance
-```
-kubectl apply -f .\K8S\Redis\redis-plat-depl.yml
-```
-- ## Set up tinder service
-1) Create tinder node port(if you don't want to access service via localhost you may skip this step)
-```
-kubectl apply -f  .\K8S\TinderService\tinder-np-srv.yml
-```
-2) Create tinder deployment
-```
-kubectl apply -f  .\K8S\TinderService\tinder-depl.yml
-```
-- ## Set up subscription service
-1) Create subscription node port(if you don't want to access service via localhost you may skip this step)
-```
-kubectl apply -f  .\K8S\SubscriptionService\subscription-np-srv.yml
-```
-2) Create subscription deployment
-```
-kubectl apply -f  .\K8S\SubscriptionService\subscription-depl.yml
-```
-- ## Set up notification service
-1) Create notification node port(if you don't want to access service via localhost you may skip this step)
-```
-kubectl apply -f  .\K8S\NotificationService\notification-np-srv.yml
-```
-2) Create notification deployment
-```
-kubectl apply -f  .\K8S\NotificationService\notification-depl.yml
-```
-- ## Set up graphql service
-1) Create graphql node port(if you don't want to access service via localhost you may skip this step)
-```
-kubectl apply -f  .\K8S\GraphqlService\graphql-np-srv.yml
-```
-2) Create graphql deployment
-```
-kubectl apply -f  .\K8S\GraphqlService\graphql-depl.yml
-```
 - ## Set up FusionAuth service 
 1) Add a chart repository
 ```
@@ -190,6 +117,84 @@ ingress-nginx-controller-admission   ClusterIP      10.103.106.244   <none>     
 5) Create Nginx service
 ```
 kubectl apply -f  .\K8S\Nginx\ingress-srv.yml
+```
+- ## Run this command
+```
+kubectl apply -f  .\K8S\TinderMssqlDb\local-pvc.yml,.\K8S\TinderMssqlDb\mssql-plat-depl.yml,.\K8S\FusionAuthPostgresDb\local-pvc.postgress.yml,.\K8S\FusionAuthPostgresDb\postgres-plat-depl.yml,.\K8S\SubscriptionMongoDb\local-pvc.mongo.yml,.\K8S\SubscriptionMongoDb\mongo-plat-depl.yml,.\K8S\Rabbitmq\rabbitmq-depl.yml,.\K8S\Redis\redis-plat-depl.yml,.\K8S\TinderService\tinder-np-srv.yml,.\K8S\TinderService\tinder-depl.yml,.\K8S\SubscriptionService\subscription-np-srv.yml,.\K8S\SubscriptionService\subscription-depl.yml,.\K8S\NotificationService\notification-np-srv.yml,.\K8S\NotificationService\notification-depl.yml,.\K8S\GraphqlService\graphql-np-srv.yml,.\K8S\GraphqlService\graphql-depl.yml
+```
+- ## explanation to the command above
+- ## Set up mssql db for tinderService
+1) Create mssql persistent volume claim
+```
+kubectl apply -f  .\K8S\TinderMssqlDb\local-pvc.yml
+```
+2) Creste mssql instance
+```
+kubectl apply -f  .\K8S\TinderMssqlDb\mssql-plat-depl.yml
+```
+- ## Set up postgres db for fusionAuth
+1) Create postgres persistent volume claim
+```
+kubectl apply -f  .\K8S\FusionAuthPostgresDb\local-pvc.postgress.yml
+```
+2) Create postgres instance
+```
+kubectl apply -f  .\K8S\FusionAuthPostgresDb\postgres-plat-depl.yml
+```
+- ## Set up mongo db for subscriptionService
+1) Create mongo persistent volume claim
+```
+kubectl apply -f  .\K8S\SubscriptionMongoDb\local-pvc.mongo.yml
+```
+2) Create mongo instance
+```
+kubectl apply -f  .\K8S\SubscriptionMongoDb\mongo-plat-depl.yml
+```
+- ## Set up rabbitmq service
+1) Create rabbitmq instance
+```
+kubectl apply -f .\K8S\Rabbitmq\rabbitmq-depl.yml
+```
+- ## Set up redis service
+1) Create redis instance
+```
+kubectl apply -f .\K8S\Redis\redis-plat-depl.yml
+```
+- ## Set up tinder service
+1) Create tinder node port(if you don't want to access service via localhost you may skip this step)
+```
+kubectl apply -f  .\K8S\TinderService\tinder-np-srv.yml
+```
+2) Create tinder deployment
+```
+kubectl apply -f  .\K8S\TinderService\tinder-depl.yml
+```
+- ## Set up subscription service
+1) Create subscription node port(if you don't want to access service via localhost you may skip this step)
+```
+kubectl apply -f  .\K8S\SubscriptionService\subscription-np-srv.yml
+```
+2) Create subscription deployment
+```
+kubectl apply -f  .\K8S\SubscriptionService\subscription-depl.yml
+```
+- ## Set up notification service
+1) Create notification node port(if you don't want to access service via localhost you may skip this step)
+```
+kubectl apply -f  .\K8S\NotificationService\notification-np-srv.yml
+```
+2) Create notification deployment
+```
+kubectl apply -f  .\K8S\NotificationService\notification-depl.yml
+```
+- ## Set up graphql service
+1) Create graphql node port(if you don't want to access service via localhost you may skip this step)
+```
+kubectl apply -f  .\K8S\GraphqlService\graphql-np-srv.yml
+```
+2) Create graphql deployment
+```
+kubectl apply -f  .\K8S\GraphqlService\graphql-depl.yml
 ```
 - # How to access services
 1) Api gateway endpoint
