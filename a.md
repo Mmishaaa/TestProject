@@ -24,7 +24,7 @@ docker-compose up
 docker-compose up -d (to run in detached mode)
 ```
 - # K8S
-- 1 Set up FusionAuth service 
+- ## Set up FusionAuth service 
 1) Add a chart repository
 ```
 helm repo add fusionauth https://fusionauth.github.io/charts
