@@ -15,7 +15,7 @@ You can clone this repository:
 ```
 https://github.com/Finka95/KM
 ```
-- ## Docker compose
+- # Docker compose
 
 1) create .env file(u may use .env.example)
 2) Run docker container using powershell
@@ -23,8 +23,8 @@ https://github.com/Finka95/KM
 docker-compose up
 docker-compose up -d (to run in detached mode)
 ```
-- ## K8S
-- # Set up mssql db for tinderService
+- # K8S
+- ## Set up mssql db for tinderService
 1) Create mssql persistent volume claim
 ```
 kubectl apply -f  .\K8S\TinderMssqlDb\local-pvc.yml
@@ -33,7 +33,7 @@ kubectl apply -f  .\K8S\TinderMssqlDb\local-pvc.yml
 ```
 kubectl apply -f  .\K8S\TinderMssqlDb\mssql-plat-depl.yml
 ```
-- # Set up postgres db for fusionAuth
+- ## Set up postgres db for fusionAuth
 1) Create postgres persistent volume claim
 ```
 kubectl apply -f  .\K8S\FusionAuthPostgresDb\local-pvc.postgress.yml
@@ -42,7 +42,7 @@ kubectl apply -f  .\K8S\FusionAuthPostgresDb\local-pvc.postgress.yml
 ```
 kubectl apply -f  .\K8S\FusionAuthPostgresDb\postgres-plat-depl.yml
 ```
-- # Set up mongo db for subscriptionService
+- ## Set up mongo db for subscriptionService
 1) Create mongo persistent volume claim
 ```
 kubectl apply -f  .\K8S\SubscriptionMongoDb\local-pvc.mongo.yml
