@@ -51,6 +51,16 @@ kubectl apply -f  .\K8S\SubscriptionMongoDb\local-pvc.mongo.yml
 ```
 kubectl apply -f  .\K8S\SubscriptionMongoDb\mongo-plat-depl.yml
 ```
+- ## Set up rabbitmq service
+1) Create rabbitmq instance
+```
+kubectl apply -f .\K8S\Rabbitmq\rabbitmq-depl.yml
+```
+- ## Set up redis service
+1) Create redis instance
+```
+kubectl apply -f .\K8S\Redis\redis-plat-depl.yml
+```
 - ## Set up tinder service
 1) Create tinder node port(if you don't want to access service via localhost you may skip this step)
 ```
