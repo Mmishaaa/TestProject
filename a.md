@@ -161,8 +161,8 @@ http://acme.com
 ```
 kubectl get service
 ```
-  - Find services with NodePort TYPE and you can acces them via http://localhost:3xxxx
-  - Find services with LoadBalancer TYPE and you can acces them via http://localhost:port, use the first port(by default, one of these: 27017/1433/5432/15672)
+  ✓ Find services with NodePort TYPE and you can acces them via http://localhost:3xxxx
+  ✓ Find services with LoadBalancer TYPE and you can acces them via http://localhost:port, use the first port(by default, one of these: 27017/1433/5432/15672)
 - # Commands sheet
   
 1) Get all pods
