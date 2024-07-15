@@ -152,3 +152,36 @@ my-release-fusionauth   1/1     1            1           4m16s   fusionauth   fu
  kubectl port-forward svc/my-release-fusionauth 9011:9011
 ```
 11) Navigate to http://localhost:9011 and you will land on the FusionAuth Setup Wizard.
+- # How to access
+1) To access specific service from localhost you need to use serviceNodePort
+```
+kubectl get service
+```
+  a) Find services with NodePort TYPE and you can acces them via http://localhost:3xxxx
+  b) Find services with LoadBalancer TYPE and you can acces them via http://localhost:port, user should use the first port(by default, one of these: 27017/1433/5432/15672)
+- # Commands sheet
+  
+1) Get all pods
+```
+kubectl get pods
+```
+2)  Get all services
+```
+kubectl get service
+```
+3) Get all deployments
+```
+kubectl get deployments
+```
+4) Get all persistent volume claims
+```
+kubectl get pvc
+```
+5) Get all namespaces
+```
+kubectl get namespace
+```
+6) Get services from specific namespace
+```
+kubectl get service --namespace=<namespace_name>
+```
