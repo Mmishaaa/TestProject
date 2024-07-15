@@ -122,7 +122,7 @@ fusionauth/fusionauth	0.10.5       	1.30.1     	Helm chart for fusionauth
 ```
 6) Install the FusionAuth chart
 ```
-helm install my-release fusionauth/fusionauth -f values.yaml
+helm install my-release fusionauth/fusionauth -f .\K8S\values.yaml
 ```
 7) Example output
 ```
