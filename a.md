@@ -122,7 +122,7 @@ kubectl apply -f  .\K8S\Nginx\ingress-srv.yml
 ```
 kubectl apply -f  .\K8S\TinderMssqlDb\local-pvc.yml,.\K8S\TinderMssqlDb\mssql-plat-depl.yml,.\K8S\FusionAuthPostgresDb\local-pvc.postgress.yml,.\K8S\FusionAuthPostgresDb\postgres-plat-depl.yml,.\K8S\SubscriptionMongoDb\local-pvc.mongo.yml,.\K8S\SubscriptionMongoDb\mongo-plat-depl.yml,.\K8S\Rabbitmq\rabbitmq-depl.yml,.\K8S\Redis\redis-plat-depl.yml,.\K8S\TinderService\tinder-np-srv.yml,.\K8S\TinderService\tinder-depl.yml,.\K8S\SubscriptionService\subscription-np-srv.yml,.\K8S\SubscriptionService\subscription-depl.yml,.\K8S\NotificationService\notification-np-srv.yml,.\K8S\NotificationService\notification-depl.yml,.\K8S\GraphqlService\graphql-np-srv.yml,.\K8S\GraphqlService\graphql-depl.yml
 ```
-- ## Explanation to the command above
+- ## Step by step explanation to the command above  ↓
 - ## Set up mssql db for tinderService
 1) Create mssql persistent volume claim
 ```
