@@ -104,7 +104,7 @@ helm repo add fusionauth https://fusionauth.github.io/charts
 ```
 2) List chart repositories
 ```
-List chart repositories
+helm repo list
 ```
 3) Output from listing chart repositories
 ```
