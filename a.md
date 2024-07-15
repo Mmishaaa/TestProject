@@ -151,6 +151,10 @@ my-release-fusionauth   1/1     1            1           4m16s   fusionauth   fu
  kubectl port-forward svc/my-release-fusionauth 9011:9011
 ```
 11) Navigate to http://localhost:9011 and you will land on the FusionAuth Setup Wizard.
+```
+Email: tinder@gmail.com
+Password: 12345aA!
+```
 - ## Adding an API Gateway
 1) Add new host configuration
 ```
