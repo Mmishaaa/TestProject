@@ -88,7 +88,7 @@ kubectl apply -f  .\K8S\GraphqlService\graphql-np-srv.yml
 kubectl apply -f  .\K8S\GraphqlService\graphql-depl.yml
 ```
 - ## Adding an API Gateway
-1)Add new host configuration
+1) Add new host configuration
 ```
 cd C:\Windows\System32\drivers\etc\
 open file hosts
