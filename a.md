@@ -87,42 +87,6 @@ kubectl apply -f  .\K8S\GraphqlService\graphql-np-srv.yml
 ```
 kubectl apply -f  .\K8S\GraphqlService\graphql-depl.yml
 ```
-- ## Adding an API Gateway
-1) Add new host configuration
-```
-cd C:\Windows\System32\drivers\etc\
-open file hosts
-add <127.0.0.1 acme.com> above # Added by Docker Desktop line
-```
-2) NETWORK LOAD BALANCER (NLB)
-```
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/aws/deploy.yaml
-```
-3) Run
-```
-kubectl get pods --namespace=ingress-nginx
-```
-4) Output from running
-```
-NAME                                        READY   STATUS      RESTARTS       AGE
-ingress-nginx-admission-create-p4g7d        0/1     Completed   0              18h
-ingress-nginx-admission-patch-h5wd5         0/1     Completed   1              18h
-ingress-nginx-controller-57b7568757-q8wkp   1/1     Running     3 (158m ago)   18h
-```
-5) Run this command 
-```
-kubectl get service --namespace=ingress-nginx
-```
-6) Output from running
-```
-NAME                                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
-ingress-nginx-controller             LoadBalancer   10.111.244.96    localhost     80:30619/TCP,443:30998/TCP   18h
-ingress-nginx-controller-admission   ClusterIP      10.103.106.244   <none>        443/TCP                      18h
-```
-5) Create Nginx service
-```
-kubectl apply -f  .\K8S\Nginx\ingress-srv.yml
-```
 - ## Set up FusionAuth service 
 1) Add a chart repository
 ```
@@ -177,6 +141,42 @@ my-release-fusionauth   1/1     1            1           4m16s   fusionauth   fu
  kubectl port-forward svc/my-release-fusionauth 9011:9011
 ```
 11) Navigate to http://localhost:9011 and you will land on the FusionAuth Setup Wizard.
+- ## Adding an API Gateway
+1) Add new host configuration
+```
+cd C:\Windows\System32\drivers\etc\
+open file hosts
+add <127.0.0.1 acme.com> above # Added by Docker Desktop line
+```
+2) NETWORK LOAD BALANCER (NLB)
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/aws/deploy.yaml
+```
+3) Run
+```
+kubectl get pods --namespace=ingress-nginx
+```
+4) Output from running
+```
+NAME                                        READY   STATUS      RESTARTS       AGE
+ingress-nginx-admission-create-p4g7d        0/1     Completed   0              18h
+ingress-nginx-admission-patch-h5wd5         0/1     Completed   1              18h
+ingress-nginx-controller-57b7568757-q8wkp   1/1     Running     3 (158m ago)   18h
+```
+5) Run this command 
+```
+kubectl get service --namespace=ingress-nginx
+```
+6) Output from running
+```
+NAME                                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+ingress-nginx-controller             LoadBalancer   10.111.244.96    localhost     80:30619/TCP,443:30998/TCP   18h
+ingress-nginx-controller-admission   ClusterIP      10.103.106.244   <none>        443/TCP                      18h
+```
+5) Create Nginx service
+```
+kubectl apply -f  .\K8S\Nginx\ingress-srv.yml
+```
 - # How to access services
 1) Api gateway endpoint
 ```
