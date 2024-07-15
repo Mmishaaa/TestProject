@@ -226,7 +226,7 @@ kubectl get service --namespace=<namespace_name>
 ```
 7) Delete namespace
 ```
- kubectl delete namespace ingress-nginx
+ kubectl delete namespace <namespace_name>
 ```
 8) Delete deployment
 ```
