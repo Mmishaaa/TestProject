@@ -94,7 +94,32 @@ cd C:\Windows\System32\drivers\etc\
 open file hosts
 add <127.0.0.1 acme.com> above # Added by Docker Desktop line
 ```
-2) Create Nginx service
+2) NETWORK LOAD BALANCER (NLB)
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/aws/deploy.yaml
+```
+3) Run
+```
+kubectl get pods --namespace=ingress-nginx
+```
+4) Output from running
+```
+NAME                                        READY   STATUS      RESTARTS       AGE
+ingress-nginx-admission-create-p4g7d        0/1     Completed   0              18h
+ingress-nginx-admission-patch-h5wd5         0/1     Completed   1              18h
+ingress-nginx-controller-57b7568757-q8wkp   1/1     Running     3 (158m ago)   18h
+```
+5) Run this command 
+```
+kubectl get service --namespace=ingress-nginx
+```
+6) Output from running
+```
+NAME                                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+ingress-nginx-controller             LoadBalancer   10.111.244.96    localhost     80:30619/TCP,443:30998/TCP   18h
+ingress-nginx-controller-admission   ClusterIP      10.103.106.244   <none>        443/TCP                      18h
+```
+5) Create Nginx service
 ```
 kubectl apply -f  .\K8S\Nginx\ingress-srv.yml
 ```
@@ -188,4 +213,20 @@ kubectl get namespace
 6) Get services from specific namespace
 ```
 kubectl get service --namespace=<namespace_name>
+```
+7) Delete deployment
+```
+kubectl delete deployment <deployment-name>
+```
+8) Delete service
+```
+kubectl delete service <service-name>
+```
+8) Delete pod
+```
+kubectl delete pod <pod-name>
+```
+8) Uninstall the FusionAuth chart
+```
+helm uninstall my-release
 ```
