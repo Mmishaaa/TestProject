@@ -99,7 +99,7 @@ add <127.0.0.1 acme.com> above # Added by Docker Desktop line
 kubectl apply -f  .\K8S\Nginx\ingress-srv.yml
 ```
 - ## Set up FusionAuth service 
-1)Add a chart repository
+1) Add a chart repository
 ```
 helm repo add fusionauth https://fusionauth.github.io/charts
 ```
